@@ -5,9 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -20,6 +18,7 @@ import java.util.Date;
 public class Notification {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String content;
     private Long userId;
@@ -27,5 +26,5 @@ public class Notification {
     private Date createdDate;
     @LastModifiedDate
     private Date modifiedDate;
-    private Boolean readStatus;
+    private Boolean readStatus = false;
 }

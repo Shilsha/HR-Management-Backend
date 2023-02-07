@@ -39,4 +39,9 @@ public class NotificationService {
             notificationRepository.save(notification1);
         }
     }
+
+    public List<Notification> getAllNotification() {
+        logger.info("Getting all notification");
+        return notificationRepository.findAll();
+    }
 }
