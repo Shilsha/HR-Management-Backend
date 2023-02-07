@@ -2,8 +2,12 @@ package com.ca.entity;
 
 import com.ca.utils.Role;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Builder
@@ -11,6 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 
     @Id
@@ -35,5 +40,9 @@ public class User {
     private boolean otpVerify;
 
     private boolean status;
+    @CreatedDate
+    private Date createdDate;
+    @LastModifiedDate
+    private Date modifiedDate;
 
 }

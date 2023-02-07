@@ -5,7 +5,9 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Id;
 import java.util.Date;
 
 @Entity
@@ -15,16 +17,15 @@ import java.util.Date;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-public class CaSubCaService {
+public class Notification {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String serviceName;
-    private String serviceDesc;
+    private String content;
     private Long userId;
     @CreatedDate
     private Date createdDate;
     @LastModifiedDate
     private Date modifiedDate;
+    private Boolean readStatus;
 }
