@@ -26,6 +26,7 @@ com\ca\model\response\LoginResponse$LoginResponseBuilder.class
 com\ca\repository\CaSubCaServiceRepository.class
 com\ca\utils\Role.class
 com\ca\model\response\SubCAServiceResponseDto$SubCAServiceResponseDtoBuilder.class
+com\ca\entity\Notification.class
 com\ca\model\response\LoginResponse.class
 com\ca\controller\CAController.class
 com\ca\model\response\SubCAResponseDto$SubCAResponseDtoBuilder.class
@@ -37,11 +38,13 @@ com\ca\entity\Customer$CustomerBuilder.class
 com\ca\model\response\CustomerResponseDto.class
 com\ca\entity\Customer.class
 com\ca\model\request\LoginRequest$LoginRequestBuilder.class
+com\ca\entity\Notification$NotificationBuilder.class
 com\ca\service\CAService.class
 com\ca\model\UserRequestDto.class
 com\ca\entity\Admin$AdminBuilder.class
 com\ca\repository\SubCARepository.class
 com\ca\service\UserService.class
+com\ca\repository\NotificationRepository.class
 com\ca\repository\DocumentRepository.class
 com\ca\controller\AdminController.class
 com\ca\config\SwaggerConfig.class
@@ -49,6 +52,7 @@ com\ca\model\AdminDto.class
 com\ca\entity\CaSubCaService.class
 com\ca\entity\Admin.class
 com\ca\model\response\SubCAServiceResponseDto.class
+com\ca\controller\NotificationController.class
 com\ca\exception\GlobalException.class
 com\ca\config\JwtUserDetailsService.class
 com\ca\repository\AdminRepopsitory.class
@@ -69,5 +73,6 @@ com\ca\model\response\CustomerResponseDto$CustomerResponseDtoBuilder.class
 com\ca\model\response\SubCAResponseDto.class
 com\ca\controller\CaSubCaServiceController.class
 com\ca\service\AdminService.class
+com\ca\service\NotificationService.class
 com\ca\service\OtpService.class
 com\ca\entity\User$UserBuilder.class
