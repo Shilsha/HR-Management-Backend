@@ -102,7 +102,7 @@ public class CustomerService {
 
             customerResponse.add(customerResponseDto);
         }
-        logger.info("Search customer whose name start from : {}",name);
+        logger.info("Search customer whose name start with : {}",name);
         return customerResponse;
     }
 }
