@@ -1,50 +1,32 @@
-package com.ca.entity;
+package com.ca.model.response;
 
 import com.ca.utils.Role;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import java.util.Date;
 
-@Entity
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class)
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+@Builder
+public class UserResponseDto {
     private Long id;
-
     private String firstName;
     private String lastName;
-
-    @Column(unique = true)
     private String email;
-
     private String address;
-
     private String mobile;
     private String phone;
-
-    private String password;
     private Role role;
-
     private String otp;
     private boolean otpVerify;
-
     private boolean status;
-    @CreatedDate
     private Date createdDate;
-    @LastModifiedDate
     private Date modifiedDate;
-
     private String profileUrl;
     private String profileName;
 

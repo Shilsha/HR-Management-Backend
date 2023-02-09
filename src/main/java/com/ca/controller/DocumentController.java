@@ -20,7 +20,6 @@ public class DocumentController {
     @PostMapping("/upload")
     public ResponseEntity<Document> uploadDocument(@RequestParam Long customerId,@RequestParam Long customerUserId,
                                          @RequestParam MultipartFile file){
-        System.out.println("Inside Upload controller");
 
         return ResponseEntity.ok(documentService.uploadDocument(customerId,customerUserId,file));
     }

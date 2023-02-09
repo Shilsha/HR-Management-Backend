@@ -2,6 +2,7 @@ package com.ca.controller;
 
 import com.ca.entity.User;
 import com.ca.model.UserRequestDto;
+import com.ca.model.response.UserResponseDto;
 import com.ca.repository.UserRepository;
 import com.ca.service.UserService;
 import org.slf4j.Logger;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -47,10 +49,16 @@ public class UserController {
         return ResponseEntity.ok(allUser);
     }
 
-    @PutMapping("/{userId}")
-    public void updateUser(@RequestBody UserRequestDto userRequest,@PathVariable Long userId){
+    @PutMapping
+    public void updateUser(@RequestBody UserRequestDto userRequest,@RequestParam Long userId){
 
         userService.updateUser(userRequest, userId);
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<UserResponseDto> addProfile(@RequestParam Long userId, @RequestParam MultipartFile image){
+
+        return ResponseEntity.ok(userService.uploadImage(userId, image));
     }
 
     @DeleteMapping("/{userId}")
