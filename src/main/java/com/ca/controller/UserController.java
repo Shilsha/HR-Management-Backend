@@ -33,8 +33,8 @@ public class UserController {
     }
 
     //single user get
-    @GetMapping("/{userId}")
-    public ResponseEntity<User> getSingleUser(@PathVariable String userId) {
+    @GetMapping("/u")
+    public ResponseEntity<User> getSingleUser(@RequestParam String userId) {
         logger.info("Get Single User Handler: UserController");
         User user = userService.getUser(Long.parseLong(userId));
         logger.info(user.getFirstName());

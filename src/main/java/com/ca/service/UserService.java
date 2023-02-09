@@ -8,8 +8,10 @@ import com.ca.utils.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +44,9 @@ public class UserService {
             throw new BadReqException("This email id already exist!!");
         }
 
+        String encodedPassword = Base64.getEncoder().encodeToString(userRequest.getPassword().getBytes());
+        System.out.println("Encoded Password "+ encodedPassword);
+
         User user = User.builder()
                 .firstName(userRequest.getFirstName())
                 .lastName(userRequest.getLastName())
@@ -49,7 +54,7 @@ public class UserService {
                 .address(userRequest.getAddress())
                 .mobile(userRequest.getMobile())
                 .phone(userRequest.getPhone())
-                .password(userRequest.getPassword())
+                .password(encodedPassword)
                 .role(userRequest.getRole())
                 .status(false)
                 .otp(otpService.generateOtp())
@@ -108,7 +113,12 @@ public class UserService {
 
     public User getUser(Long userId) {
         logger.info("Getting the user id : {}", userId);
-        return userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).get();
+
+        byte[] decodedBytes = Base64.getDecoder().decode(user.getPassword());
+        String decodedPassword = new String(decodedBytes);
+        user.setPassword(decodedPassword);
+        return user;
     }
 
     public List<User> getAllUser()
@@ -116,8 +126,6 @@ public class UserService {
         logger.info("Getting all user");
         return userRepository.findAll();
     }
-
-
 
     public void updateUser(UserRequestDto userRequest, Long userId) {
 

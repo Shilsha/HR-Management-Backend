@@ -15,11 +15,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -29,8 +29,6 @@ public class LoginService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private final PasswordEncoder passwordEncoder;
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
@@ -55,13 +53,21 @@ public class LoginService {
 
         if (emailValidation){
 
-            User user1 = userRepository.findByEmail(loginRequest.getEmail());
-            if (user1 != null){
+            String encodedPassword = Base64.getEncoder().encodeToString(loginRequest.getPassword().getBytes());
+            System.out.println("Password encoded "+ encodedPassword);
+
+            User user = userRepository.findByEmail(loginRequest.getEmail());
+            if (user != null){
+
+                if (!encodedPassword.equals(user.getPassword())){
+                    logger.info("Password Incorrect");
+                    throw new BadReqException("Incorrect Password");
+                }
 
                 try {
 
                     logger.info("Inside Authentication");
-                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+                    authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), encodedPassword));
 
                 } catch (UsernameNotFoundException e) {
                     e.printStackTrace();
@@ -72,9 +78,8 @@ public class LoginService {
                     throw new Exception("Bad Credentials");
                 }
 
-                User user = userRepository.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());
 
-                final UserDetails userDetails = new org.springframework.security.core.userdetails.User(loginRequest.getEmail(), new BCryptPasswordEncoder().encode(loginRequest.getPassword()), new ArrayList<>());
+                final UserDetails userDetails = new org.springframework.security.core.userdetails.User(loginRequest.getEmail(), loginRequest.getPassword(), new ArrayList<>());
 
                 String token = jwtTokenUtil.generateToken(userDetails);
 
