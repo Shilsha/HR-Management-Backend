@@ -13,6 +13,7 @@ import com.ca.model.response.SearchResponse;
 import com.ca.model.response.UserResponseDto;
 import com.ca.repository.*;
 import com.ca.utils.Role;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,13 +176,14 @@ public class UserService {
         }
 
         String profileName = image.getOriginalFilename();
-        String type = profileName.substring(profileName.lastIndexOf(".") + 1);
-        System.out.println("Image Type "+ type);
-        profileName = System.currentTimeMillis() + "" + profileName;
+        String type = profileName.substring(profileName.lastIndexOf("."));
+        String profileNameWithoutExt = FilenameUtils.removeExtension(profileName);
+        profileName = profileNameWithoutExt + "" + System.currentTimeMillis() + "" + type;
+        logger.info("Profile name {}",profileName);
 
         User user1 = user.get();
 
-        if (!(type.equals("jpg") || type.equals("png"))){
+        if (!(type.equals(".jpg") || type.equals(".png"))){
             throw new BadReqException("Image extension is not JPEG or PNG !!");
         }
 

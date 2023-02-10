@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/ca")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CAController {
 
     @Autowired

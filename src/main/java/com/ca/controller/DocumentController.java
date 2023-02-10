@@ -1,6 +1,7 @@
 package com.ca.controller;
 
 import com.ca.entity.Document;
+import com.ca.model.response.DocumentResponseDto;
 import com.ca.service.DocumentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
+@RequestMapping("/document")
 public class DocumentController {
 
     @Autowired
@@ -24,10 +27,15 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.uploadDocument(customerId,customerUserId,file));
     }
 
-    @GetMapping("/doc")
+    @GetMapping
     public List<Document> getDocument(@RequestParam Long customerId){
 
         return documentService.getDocument(customerId);
+    }
+
+    @GetMapping("/search")
+    public List<DocumentResponseDto> searchDocument(@RequestParam String docName){
+        return documentService.searchDocument(docName);
     }
 
 }

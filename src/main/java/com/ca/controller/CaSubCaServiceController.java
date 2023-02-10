@@ -9,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/service")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CaSubCaServiceController {
 
     @Autowired

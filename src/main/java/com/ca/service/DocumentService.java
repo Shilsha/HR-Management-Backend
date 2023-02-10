@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ca.entity.Customer;
 import com.ca.entity.Document;
 import com.ca.exception.BadReqException;
+import com.ca.model.response.DocumentResponseDto;
 import com.ca.repository.CustomerRepository;
 import com.ca.repository.DocumentRepository;
 import org.slf4j.Logger;
@@ -17,8 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.apache.commons.io.FilenameUtils;
 
+import javax.print.Doc;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +48,10 @@ public class DocumentService {
         }
 
         String fileName = file.getOriginalFilename();
-        fileName = System.currentTimeMillis() + "" + fileName;
+        String extension = fileName.substring(fileName.lastIndexOf("."));
+        String fileNameWithoutExt = FilenameUtils.removeExtension(fileName);
+        fileName = fileNameWithoutExt + "" + System.currentTimeMillis() + "" + extension;
+        logger.info("File name {}",fileName);
 
         Document document = new Document();
         try {
@@ -89,5 +96,24 @@ public class DocumentService {
             logger.info("Document List send successfully");
             return documentList;
         }
+    }
+
+    public List<DocumentResponseDto> searchDocument(String docName) {
+
+        List<Document> document = documentRepository.findByName(docName);
+        List<DocumentResponseDto> documentResponseList = new ArrayList<>();
+
+        for (Document document1: document){
+            DocumentResponseDto documentResponse = DocumentResponseDto.builder()
+                    .id(document1.getId())
+                    .customerId(document1.getCustomerId())
+                    .customerUserId(document1.getCustomerUserId())
+                    .docName(document1.getDocName())
+                    .docUrl(document1.getDocUrl())
+                    .build();
+
+            documentResponseList.add(documentResponse);
+        }
+        return documentResponseList;
     }
 }

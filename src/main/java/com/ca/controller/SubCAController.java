@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/subca")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SubCAController {
 
     @Autowired

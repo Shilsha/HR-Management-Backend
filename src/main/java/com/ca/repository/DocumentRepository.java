@@ -12,4 +12,7 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     @Query(value = "select * from document d where customer_id=?1",nativeQuery = true)
     List<Document> findByCustomerId(Long customerId);
+
+    @Query(value = "select * from document d where doc_name like CONCAT(?1, '%')", nativeQuery = true)
+    List<Document> findByName(String docName);
 }
