@@ -38,11 +38,6 @@ public class CustomerController {
         return customerService.getCustomerOfCA(caId);
     }
 
-    @GetMapping("/search")
-    public List<CustomerResponseDto> searchCustomer(@RequestParam String name){
-        return customerService.searchCustomer(name);
-    }
-
     @PutMapping("/{customerId}")
     public void UpdateCustomer(@RequestBody Customer customer, @PathVariable Long customerId){
         customerService.updateCustomer(customer, customerId);

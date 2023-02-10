@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ca.entity.*;
 import com.ca.exception.BadReqException;
 import com.ca.model.UserRequestDto;
+import com.ca.model.response.SearchResponse;
 import com.ca.model.response.UserResponseDto;
 import com.ca.repository.*;
 import com.ca.utils.Role;
@@ -16,12 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +36,7 @@ public class UserService {
     @Autowired
     private CARepository caRepository;
     @Autowired
-    private AdminRepopsitory adminRepopsitory;
+    private AdminRepository adminRepository;
     @Autowired
     private OtpService otpService;
     @Autowired
@@ -88,7 +88,7 @@ public class UserService {
                     .role(userRequest.getAdminRole())
                     .build();
 
-            Admin adminResponse = adminRepopsitory.save(admin);
+            Admin adminResponse = adminRepository.save(admin);
 
             logger.info("Admin saved successfully in DB : {}",adminResponse.getId());
 
@@ -236,6 +236,49 @@ public class UserService {
                 .build();
 
         return userResponse;
+    }
+
+    //    <------------------------------------Search User---------------------------------------------->
+
+    public List<SearchResponse> searchUser(String name, Role role) {
+        int r = role.ordinal();
+        List<User> user1 = userRepository.findNameStartWith(r, name);
+        List<SearchResponse> searchResponse = new ArrayList<>();
+
+        for (User user: user1){
+            Long id=null;
+
+            if (role.equals(Role.CUSTOMER)){
+                Customer customer = customerRepository.findUserId(user.getId());
+                id = customer.getId();
+            } else if (role.equals(Role.ADMIN)) {
+                Admin admin = adminRepository.findByUserId(user.getId());
+                id = admin.getId();
+            } else if (role.equals(Role.CA)) {
+                CA ca = caRepository.findByUserId(user.getId());
+                id = ca.getId();
+            } else if (role.equals(Role.SUBCA)) {
+                SubCA subCA = subCARepository.findByUserId(user.getId());
+                id = subCA.getId();
+            }
+
+            SearchResponse search = SearchResponse.builder()
+                    .id(id)
+                    .userId(user.getId())
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .email(user.getEmail())
+                    .address(user.getAddress())
+                    .mobile(user.getMobile())
+                    .phone(user.getPhone())
+                    .role(role)
+                    .build();
+
+            searchResponse.add(search);
+        }
+        logger.info("Search user whose name start with : {}",name);
+        logger.info("Role of the user is : {}",role);
+        return searchResponse;
     }
 
     public void deleteUser(Long userId) {

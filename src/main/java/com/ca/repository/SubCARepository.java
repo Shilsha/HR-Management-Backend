@@ -12,4 +12,7 @@ public interface SubCARepository extends JpaRepository<SubCA, Long> {
 
     @Query(value = "select * from subca s where ca_id=?1",nativeQuery = true)
     List<SubCA> findByCAId(Long caId);
+
+    @Query(value = "select * from subca s where user_id=?1",nativeQuery = true)
+    SubCA findByUserId(Long id);
 }

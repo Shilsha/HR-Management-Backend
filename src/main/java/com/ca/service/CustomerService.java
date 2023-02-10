@@ -80,29 +80,4 @@ public class CustomerService {
         }
         return customerResponse;
     }
-
-//    <------------------------------------Search Customer---------------------------------------------->
-    public List<CustomerResponseDto> searchCustomer(String name) {
-
-        List<User> user1 = userRepository.findByName(name);
-        List<CustomerResponseDto> customerResponse = new ArrayList<>();
-
-        for (User user: user1){
-            Customer customer = customerRepository.findUserId(user.getId());
-            CustomerResponseDto customerResponseDto = CustomerResponseDto.builder()
-                    .id(customer.getId())
-                    .userId(user.getId())
-                    .firstName(user.getFirstName())
-                    .lastName(user.getLastName())
-                    .email(user.getEmail())
-                    .address(user.getAddress())
-                    .mobile(user.getMobile())
-                    .phone(user.getPhone())
-                    .build();
-
-            customerResponse.add(customerResponseDto);
-        }
-        logger.info("Search customer whose name start with : {}",name);
-        return customerResponse;
-    }
 }

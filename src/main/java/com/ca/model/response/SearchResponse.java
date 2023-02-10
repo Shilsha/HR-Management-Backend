@@ -4,26 +4,19 @@ import com.ca.utils.Role;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import java.util.Date;
 
 @Getter
 @Setter
 @Builder
-public class UserResponseDto {
+public class SearchResponse {
+
     private Long id;
+    private Long userId;
     private String firstName;
     private String lastName;
     private String email;
-    private String address;
     private String mobile;
     private String phone;
+    private String address;
     private Role role;
-    private String otp;
-    private boolean otpVerify;
-    private boolean status;
-    private Date createdDate;
-    private Date modifiedDate;
-    private String profileUrl;
-    private String profileName;
-
 }

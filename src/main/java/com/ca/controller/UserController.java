@@ -2,9 +2,12 @@ package com.ca.controller;
 
 import com.ca.entity.User;
 import com.ca.model.UserRequestDto;
+import com.ca.model.response.CustomerResponseDto;
+import com.ca.model.response.SearchResponse;
 import com.ca.model.response.UserResponseDto;
 import com.ca.repository.UserRepository;
 import com.ca.service.UserService;
+import com.ca.utils.Role;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,5 +67,10 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable Long userId){
         userService.deleteUser(userId);
+    }
+
+    @GetMapping("/search")
+    public List<SearchResponse> searchUser(@RequestParam String name, @RequestParam Role role){
+        return userService.searchUser(name,role);
     }
 }
