@@ -1,7 +1,6 @@
 com\ca\Apimessage\ApiMessage.class
 com\ca\repository\CustomerRepository.class
-com\ca\request\LoginRequest$LoginRequestBuilder.class
-com\ca\response\LoginResponse$LoginResponseBuilder.class
+com\ca\model\response\DocumentResponseDto.class
 com\ca\service\LoginService.class
 com\ca\entity\Document$DocumentBuilder.class
 com\ca\config\JwtRequestFilter.class
@@ -20,6 +19,7 @@ com\ca\config\JwtAuthenticationEntryPoint.class
 com\ca\entity\SubCA$SubCABuilder.class
 com\ca\CAHandlerApplication.class
 com\ca\model\CustomerDto.class
+com\ca\model\response\DocumentResponseDto$DocumentResponseDtoBuilder.class
 com\ca\repository\CARepository.class
 com\ca\model\response\SearchResponse.class
 com\ca\exception\ExceptionResponse.class
@@ -36,7 +36,6 @@ com\ca\model\response\SearchResponse$SearchResponseBuilder.class
 com\ca\model\response\SubCAResponseDto$SubCAResponseDtoBuilder.class
 com\ca\model\response\CaServiceResponseDto$CaServiceResponseDtoBuilder.class
 com\ca\model\response\CaServiceResponseDto.class
-com\ca\request\LoginRequest.class
 com\ca\service\SubCAService.class
 com\ca\entity\Customer$CustomerBuilder.class
 com\ca\model\response\CustomerResponseDto.class
@@ -64,7 +63,6 @@ com\ca\controller\CustomerController.class
 com\ca\service\DocumentService.class
 com\ca\service\EmailService.class
 com\ca\repository\UserRepository.class
-com\ca\response\LoginResponse.class
 com\ca\controller\SubCAController.class
 com\ca\entity\CA$CABuilder.class
 com\ca\controller\DocumentController.class

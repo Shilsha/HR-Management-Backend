@@ -63,8 +63,12 @@ public class UserService {
             throw new BadReqException("This email id already exist!!");
         }
 
-        String encodedPassword = Base64.getEncoder().encodeToString(userRequest.getPassword().getBytes());
-        System.out.println("Encoded Password "+ encodedPassword);
+
+        String encodedPassword = null;
+        if (userRequest.getPassword() != null){
+            encodedPassword = Base64.getEncoder().encodeToString(userRequest.getPassword().getBytes());
+            System.out.println("Encoded Password "+ encodedPassword);
+        }
 
         User user = User.builder()
                 .firstName(userRequest.getFirstName())
@@ -85,47 +89,50 @@ public class UserService {
         User userResponse =  userRepository.save(user);
         logger.info("User saved successfully in DB : {} ", userResponse.getId());
 
-        if (userRequest.getRole().equals(Role.ADMIN))
-        {
-            Admin admin = Admin.builder()
-                    .userId(userResponse.getId())
-                    .role(userRequest.getAdminRole())
-                    .build();
+        if (userRequest.getRole() != null){
 
-            Admin adminResponse = adminRepository.save(admin);
+            if (userRequest.getRole().equals(Role.ADMIN))
+            {
+                Admin admin = Admin.builder()
+                        .userId(userResponse.getId())
+                        .role(userRequest.getAdminRole())
+                        .build();
 
-            logger.info("Admin saved successfully in DB : {}",adminResponse.getId());
+                Admin adminResponse = adminRepository.save(admin);
 
-        } else if (userResponse.getRole().equals(Role.CA)) {
+                logger.info("Admin saved successfully in DB : {}",adminResponse.getId());
 
-            CA ca = CA.builder()
-                    .userId(userResponse.getId())
-                    .adminId(userRequest.getAdminId())
-                    .build();
+            } else if (userResponse.getRole().equals(Role.CA)) {
 
-            CA caResponse = caRepository.save(ca);
-            logger.info("CA saved successfully in DB : {}",caResponse.getId());
+                CA ca = CA.builder()
+                        .userId(userResponse.getId())
+                        .adminId(userRequest.getAdminId())
+                        .build();
 
-        }else if (userResponse.getRole().equals(Role.CUSTOMER)){
+                CA caResponse = caRepository.save(ca);
+                logger.info("CA saved successfully in DB : {}",caResponse.getId());
 
-            Customer customer = Customer.builder()
-                    .userId(userResponse.getId())
-                    .caId(userRequest.getCaId())
-                    .build();
+            }else if (userResponse.getRole().equals(Role.CUSTOMER)){
 
-            Customer customerResponse = customerRepository.save(customer);
-            logger.info("Customer saved successfully in DB : {}",customerResponse.getId());
+                Customer customer = Customer.builder()
+                        .userId(userResponse.getId())
+                        .caId(userRequest.getCaId())
+                        .build();
 
-        } else if (userResponse.getRole().equals(Role.SUBCA)) {
+                Customer customerResponse = customerRepository.save(customer);
+                logger.info("Customer saved successfully in DB : {}",customerResponse.getId());
 
-            SubCA subCA = SubCA.builder()
-                    .caId(userRequest.getCaId())
-                    .addedBy(userRequest.getAddedBy())
-                    .userId(userResponse.getId())
-                    .build();
+            } else if (userResponse.getRole().equals(Role.SUBCA)) {
 
-            SubCA subCAResponse = subCARepository.save(subCA);
-            logger.info("Sub CA saved successfully in DB : {}",subCAResponse.getId());
+                SubCA subCA = SubCA.builder()
+                        .caId(userRequest.getCaId())
+                        .addedBy(userRequest.getAddedBy())
+                        .userId(userResponse.getId())
+                        .build();
+
+                SubCA subCAResponse = subCARepository.save(subCA);
+                logger.info("Sub CA saved successfully in DB : {}",subCAResponse.getId());
+            }
         }
 
         emailService.sendEmail(userRequest, user.getOtp());

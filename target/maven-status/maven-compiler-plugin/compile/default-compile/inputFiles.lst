@@ -25,7 +25,6 @@ D:\CA\CA-Java\src\main\java\com\ca\model\response\CustomerResponseDto.java
 D:\CA\CA-Java\src\main\java\com\ca\controller\CAController.java
 D:\CA\CA-Java\src\main\java\com\ca\model\response\LoginResponse.java
 D:\CA\CA-Java\src\main\java\com\ca\service\CaSubCaServiceService.java
-D:\CA\CA-Java\src\main\java\com\ca\request\LoginRequest.java
 D:\CA\CA-Java\src\main\java\com\ca\Apimessage\ApiMessage.java
 D:\CA\CA-Java\src\main\java\com\ca\config\SecurityConfig.java
 D:\CA\CA-Java\src\main\java\com\ca\service\EmailService.java
@@ -33,7 +32,6 @@ D:\CA\CA-Java\src\main\java\com\ca\exception\ExceptionResponse.java
 D:\CA\CA-Java\src\main\java\com\ca\model\UserRequestDto.java
 D:\CA\CA-Java\src\main\java\com\ca\config\JwtRequestFilter.java
 D:\CA\CA-Java\src\main\java\com\ca\entity\CA.java
-D:\CA\CA-Java\src\main\java\com\ca\response\LoginResponse.java
 D:\CA\CA-Java\src\main\java\com\ca\controller\NotificationController.java
 D:\CA\CA-Java\src\main\java\com\ca\entity\Document.java
 D:\CA\CA-Java\src\main\java\com\ca\model\response\UserResponseDto.java
@@ -46,6 +44,7 @@ D:\CA\CA-Java\src\main\java\com\ca\model\response\SearchResponse.java
 D:\CA\CA-Java\src\main\java\com\ca\utils\Role.java
 D:\CA\CA-Java\src\main\java\com\ca\CAHandlerApplication.java
 D:\CA\CA-Java\src\main\java\com\ca\controller\CustomerController.java
+D:\CA\CA-Java\src\main\java\com\ca\model\response\DocumentResponseDto.java
 D:\CA\CA-Java\src\main\java\com\ca\repository\CustomerRepository.java
 D:\CA\CA-Java\src\main\java\com\ca\repository\CaSubCaServiceRepository.java
 D:\CA\CA-Java\src\main\java\com\ca\config\JwtTokenUtil.java
