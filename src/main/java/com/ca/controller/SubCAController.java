@@ -26,16 +26,16 @@ public class SubCAController {
     }
 
     @GetMapping
-    public List<SubCA> getAllSubCA(){
-        return subCAService.getAllSubCA();
+    public List<SubCA> getAllSubCA(@RequestParam Integer pageNumber, @RequestParam Integer pageSize){
+        return subCAService.getAllSubCA(pageNumber, pageSize);
     }
 
-    @GetMapping("/{id}")
-    public SubCA getSingleSubCA(@PathVariable Long id){
+    @GetMapping("/id")
+    public SubCA getSingleSubCA(@RequestParam Long id){
         return subCAService.getSingleSubCA(id);
     }
 
-    @GetMapping("/{caId}")
+    @GetMapping("/c")
     public List<SubCAResponseDto> getSubCAByCAId(@RequestParam Long caId){
         return subCAService.getSubCAByCAId(caId);
     }

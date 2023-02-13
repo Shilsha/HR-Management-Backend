@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ca.entity.Customer;
 import com.ca.entity.Document;
+import com.ca.entity.User;
 import com.ca.exception.BadReqException;
 import com.ca.model.response.DocumentResponseDto;
 import com.ca.repository.CustomerRepository;
@@ -16,7 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FilenameUtils;
 
@@ -86,9 +91,12 @@ public class DocumentService {
         return document;
     }
 
-    public List<Document> getDocument(Long customerId) {
+    public List<Document> getDocument(Long customerId, Integer pageNumber, Integer pageSize) {
 
-        List<Document> documentList = documentRepository.findByCustomerId(customerId);
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Page<Document> pageDocument = documentRepository.findAll(pageable);
+        List<Document> documentList = pageDocument.getContent();
+
         if (documentList.isEmpty()){
             logger.info("Customer id not present in DB");
             throw new BadReqException("CustomerId not found");
@@ -102,6 +110,7 @@ public class DocumentService {
 
         List<Document> document = documentRepository.findByName(docName);
         List<DocumentResponseDto> documentResponseList = new ArrayList<>();
+        logger.info("Search Document name start from {}",docName);
 
         for (Document document1: document){
             DocumentResponseDto documentResponse = DocumentResponseDto.builder()

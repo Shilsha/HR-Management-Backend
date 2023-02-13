@@ -1,17 +1,23 @@
 package com.ca.service;
 
 import com.ca.entity.CaSubCaService;
+import com.ca.entity.Notification;
 import com.ca.entity.SubCA;
 import com.ca.entity.User;
 import com.ca.model.response.SubCAResponseDto;
 import com.ca.model.response.SubCAServiceResponseDto;
 import com.ca.repository.CaSubCaServiceRepository;
+import com.ca.repository.NotificationRepository;
 import com.ca.repository.SubCARepository;
 import com.ca.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +33,20 @@ public class SubCAService {
     private Logger logger = LoggerFactory.getLogger(SubCAService.class);
     @Autowired
     private CaSubCaServiceRepository caSubCaServiceRepository;
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     public SubCA create(SubCA subCA){
         logger.info("Create a SubCA");
         return subCARepository.save(subCA);
     }
 
-    public List<SubCA> getAllSubCA(){
+    public List<SubCA> getAllSubCA(Integer pageNumber, Integer pageSize){
         logger.info("Getting all SubCA");
-        return subCARepository.findAll();
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Page<SubCA> pageSubCa = subCARepository.findAll(pageable);
+        List<SubCA> subCA = pageSubCa.getContent();
+        return subCA;
     }
 
     public SubCA getSingleSubCA(Long id){

@@ -4,6 +4,7 @@ import com.ca.controller.CAController;
 import com.ca.controller.UserController;
 import com.ca.entity.CA;
 import com.ca.entity.CaSubCaService;
+import com.ca.entity.User;
 import com.ca.exception.BadReqException;
 import com.ca.model.response.CaServiceResponseDto;
 import com.ca.repository.CARepository;
@@ -11,6 +12,9 @@ import com.ca.repository.CaSubCaServiceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,9 +35,12 @@ public class CAService {
         return caRepository.save(ca);
     }
 
-    public List<CA> getAllCA() {
+    public List<CA> getAllCA(Integer pageNumber, Integer pageSize) {
         logger.info("Getting all CA");
-        return caRepository.findAll();
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Page<CA> pageCa = caRepository.findAll(pageable);
+        List<CA> ca = pageCa.getContent();
+        return ca;
     }
 
     public CA getSingleCA(Long caId){

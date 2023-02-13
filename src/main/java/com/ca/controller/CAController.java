@@ -22,8 +22,8 @@ public class CAController {
     }
 
     @GetMapping
-    public List<CA> getAllCA(){
-        return caService.getAllCA();
+    public List<CA> getAllCA(@RequestParam Integer pageNumber, @RequestParam Integer pageSize){
+        return caService.getAllCA(pageNumber, pageSize);
     }
 
     @GetMapping("/service")

@@ -28,9 +28,9 @@ public class DocumentController {
     }
 
     @GetMapping
-    public List<Document> getDocument(@RequestParam Long customerId){
+    public List<Document> getDocument(@RequestParam Long customerId,@RequestParam Integer pageNumber, @RequestParam Integer pageSize){
 
-        return documentService.getDocument(customerId);
+        return documentService.getDocument(customerId, pageNumber, pageSize);
     }
 
     @GetMapping("/search")

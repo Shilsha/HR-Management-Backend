@@ -2,11 +2,16 @@ package com.ca.service;
 
 import com.ca.controller.UserController;
 import com.ca.entity.Notification;
+import com.ca.entity.User;
 import com.ca.repository.NotificationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +45,11 @@ public class NotificationService {
         }
     }
 
-    public List<Notification> getAllNotification() {
+    public List<Notification> getAllNotification(Integer pageNumber, Integer pageSize) {
         logger.info("Getting all notification");
-        return notificationRepository.findAll();
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Page<Notification> pageNotification = notificationRepository.findAll(pageable);
+        List<Notification> notifications = pageNotification.getContent();
+        return notifications;
     }
 }

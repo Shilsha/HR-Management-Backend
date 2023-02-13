@@ -24,8 +24,8 @@ public class NotificationController {
     }
 
     @GetMapping("/all")
-    public List<Notification> getAllNotification(){
-        return notificationService.getAllNotification();
+    public List<Notification> getAllNotification(@RequestParam Integer pageNumber, @RequestParam Integer pageSize){
+        return notificationService.getAllNotification(pageNumber,pageSize);
     }
 
     @PostMapping

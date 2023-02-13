@@ -48,8 +48,8 @@ public class UserController {
     }
     //all user get
     @GetMapping
-    public ResponseEntity<List<User>> getAllUser() {
-        List<User> allUser = userService.getAllUser();
+    public ResponseEntity<List<User>> getAllUser(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) {
+        List<User> allUser = userService.getAllUser(pageNumber, pageSize);
         return ResponseEntity.ok(allUser);
     }
 

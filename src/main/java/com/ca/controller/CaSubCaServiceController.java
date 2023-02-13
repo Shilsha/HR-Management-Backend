@@ -16,8 +16,13 @@ public class CaSubCaServiceController {
     private CaSubCaServiceService caSubCaServiceService;
 
     @GetMapping
-    public List<CaSubCaService> getService(){
-        return caSubCaServiceService.getAllServices();
+    public List<CaSubCaService> getAllService(@RequestParam Integer pageNumber, @RequestParam Integer pageSize){
+        return caSubCaServiceService.getAllServices(pageNumber, pageSize);
+    }
+
+    @GetMapping("id")
+    public List<CaSubCaService> getService(@RequestParam Long userId, @RequestParam Integer pageNumber, @RequestParam Integer pageSize){
+        return caSubCaServiceService.getService(userId, pageNumber, pageSize);
     }
 
     @PostMapping

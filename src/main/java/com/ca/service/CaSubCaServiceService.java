@@ -8,7 +8,11 @@ import com.ca.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +27,11 @@ public class CaSubCaServiceService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<CaSubCaService> getAllServices() {
+    public List<CaSubCaService> getAllServices(Integer pageNumber, Integer pageSize) {
         logger.info("Getting all services");
-        List<CaSubCaService> services = caSubCaServiceRepository.findAll();
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Page<CaSubCaService> pageService = caSubCaServiceRepository.findAll(pageable);
+        List<CaSubCaService> services = pageService.getContent();
         return services;
     }
 
@@ -36,5 +42,14 @@ public class CaSubCaServiceService {
             throw new BadReqException("User Id not present in DB");
         }
         return caSubCaServiceRepository.save(service);
+    }
+
+    public List<CaSubCaService> getService(Long userId, Integer pageNumber, Integer pageSize) {
+
+        logger.info("Get service of user id {}",userId);
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Page<CaSubCaService> pageService = caSubCaServiceRepository.findAll(pageable);
+        List<CaSubCaService> caSubCaServices = pageService.getContent();
+        return caSubCaServices;
     }
 }

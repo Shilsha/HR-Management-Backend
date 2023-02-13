@@ -10,8 +10,12 @@ import com.ca.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +36,12 @@ public class CustomerService {
         return customerRepository.save(customer);
     }
 
-    public List<Customer> getAllCustomer(){
+    public List<Customer> getAllCustomer(Integer pageNumber, Integer pageSize){
         logger.info("Getting all customers");
-        return customerRepository.findAll();
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Page<Customer> pageCustomer = customerRepository.findAll(pageable);
+        List<Customer> customers = pageCustomer.getContent();
+        return customers;
     }
 
     public Customer getCustomer(Long customerId){
