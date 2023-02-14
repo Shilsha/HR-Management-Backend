@@ -4,7 +4,9 @@ import com.ca.config.JwtTokenUtil;
 import com.ca.entity.User;
 import com.ca.exception.BadReqException;
 import com.ca.model.request.LoginRequest;
+import com.ca.model.request.OtpVerifyRequest;
 import com.ca.model.response.LoginResponse;
+import com.ca.model.response.UserResponseDto;
 import com.ca.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,12 +17,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
@@ -78,7 +80,6 @@ public class LoginService {
                     throw new Exception("Bad Credentials");
                 }
 
-
                 final UserDetails userDetails = new org.springframework.security.core.userdetails.User(loginRequest.getEmail(), loginRequest.getPassword(), new ArrayList<>());
 
                 String token = jwtTokenUtil.generateToken(userDetails);
@@ -111,9 +112,16 @@ public class LoginService {
     }
 
 //<-------------------------------------- OTP Verification ------------------------------------->
-    public boolean verifyEmail(String email, String otp){
+    public UserResponseDto verifyEmail(OtpVerifyRequest otpVerifyRequest){
 
-        User user = userRepository.findByEmail(email);
+        Optional<User> user1 = Optional.ofNullable(userRepository.findByEmail(otpVerifyRequest.getEmail()));
+
+        if (!user1.isPresent()){
+            throw new BadReqException("Incorrect email");
+        }
+         User user = user1.get();
+        String otp = otpVerifyRequest.getOtp();
+
         if (otp.length() == 6){
             String otp1 = user.getOtp();
 
@@ -122,13 +130,32 @@ public class LoginService {
                 user.setOtpVerify(true);
                 user.setStatus(true);
                 userRepository.save(user);
-                return true;
             }else {
                 logger.info("Invalid OTP");
-                return false;
+                throw new BadReqException("Incorrect OTP");
             }
         }else {
             throw new BadReqException("Please enter valid otp");
         }
+
+        UserResponseDto userResponse = UserResponseDto.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .address(user.getAddress())
+                .mobile(user.getMobile())
+                .phone(user.getPhone())
+                .role(user.getRole())
+                .otp(user.getOtp())
+                .otpVerify(user.isOtpVerify())
+                .status(user.isStatus())
+                .createdDate(user.getCreatedDate())
+                .modifiedDate(user.getModifiedDate())
+                .profileUrl(user.getProfileUrl())
+                .profileName(user.getProfileName())
+                .build();
+
+        return userResponse;
     }
 }

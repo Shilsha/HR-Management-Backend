@@ -165,6 +165,7 @@ public class UserService {
         if (user1.isPresent()){
 
             User user2 = user1.get();
+
             user2.setFirstName(userRequest.getFirstName());
             user2.setLastName(userRequest.getLastName());
             user2.setAddress(userRequest.getAddress());
