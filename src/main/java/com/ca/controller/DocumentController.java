@@ -21,16 +21,16 @@ public class DocumentController {
     private DocumentService documentService;
 
     @PostMapping("/upload")
-    public ResponseEntity<Document> uploadDocument(@RequestParam Long customerId,@RequestParam Long customerUserId,
+    public ResponseEntity<Document> uploadDocument(@RequestParam Long userId,
                                          @RequestParam MultipartFile file){
 
-        return ResponseEntity.ok(documentService.uploadDocument(customerId,customerUserId,file));
+        return ResponseEntity.ok(documentService.uploadDocument(userId,file));
     }
 
     @GetMapping
-    public List<Document> getDocument(@RequestParam Long customerId,@RequestParam Integer pageNumber, @RequestParam Integer pageSize){
+    public List<Document> getDocument(@RequestParam Long userId,@RequestParam Integer pageNumber, @RequestParam Integer pageSize){
 
-        return documentService.getDocument(customerId, pageNumber, pageSize);
+        return documentService.getDocument(userId, pageNumber, pageSize);
     }
 
     @GetMapping("/search")

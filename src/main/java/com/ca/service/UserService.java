@@ -54,7 +54,7 @@ public class UserService {
     @Autowired
     private SubCARepository subCARepository;
 
-    public User saveUser(UserRequestDto userRequest) {
+    public UserResponseDto saveUser(UserRequestDto userRequest) {
         logger.info("Creating new user : {} ", userRequest.getEmail() );
 
         Optional<User> user1 = Optional.ofNullable(userRepository.findByEmail(userRequest.getEmail()));
@@ -86,7 +86,27 @@ public class UserService {
                 .profileName(null)
                 .build();
 
-        User userResponse =  userRepository.save(user);
+        userRepository.save(user);
+
+        UserResponseDto userResponse = UserResponseDto.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .address(user.getAddress())
+                .mobile(user.getMobile())
+                .phone(user.getPhone())
+                .role(user.getRole())
+                .otp(user.getOtp())
+                .otpVerify(user.isOtpVerify())
+                .status(user.isStatus())
+                .createdDate(user.getCreatedDate())
+                .modifiedDate(user.getModifiedDate())
+                .profileUrl(user.getProfileUrl())
+                .profileName(user.getProfileName())
+                .build();
+
+
         logger.info("User saved successfully in DB : {} ", userResponse.getId());
 
         if (userRequest.getRole() != null){
@@ -94,7 +114,7 @@ public class UserService {
             if (userRequest.getRole().equals(Role.ADMIN))
             {
                 Admin admin = Admin.builder()
-                        .userId(userResponse.getId())
+                        .userId(user.getId())
                         .role(userRequest.getAdminRole())
                         .build();
 
@@ -105,7 +125,7 @@ public class UserService {
             } else if (userResponse.getRole().equals(Role.CA)) {
 
                 CA ca = CA.builder()
-                        .userId(userResponse.getId())
+                        .userId(user.getId())
                         .adminId(userRequest.getAdminId())
                         .build();
 
@@ -115,7 +135,7 @@ public class UserService {
             }else if (userResponse.getRole().equals(Role.CUSTOMER)){
 
                 Customer customer = Customer.builder()
-                        .userId(userResponse.getId())
+                        .userId(user.getId())
                         .caId(userRequest.getCaId())
                         .build();
 
@@ -127,7 +147,7 @@ public class UserService {
                 SubCA subCA = SubCA.builder()
                         .caId(userRequest.getCaId())
                         .addedBy(userRequest.getAddedBy())
-                        .userId(userResponse.getId())
+                        .userId(user.getId())
                         .build();
 
                 SubCA subCAResponse = subCARepository.save(subCA);
@@ -158,27 +178,68 @@ public class UserService {
         return users;
     }
 
-    public void updateUser(UserRequestDto userRequest, Long userId) {
+    public UserResponseDto updateUser(UserRequestDto userRequest, Long id) {
 
-        Optional<User> user1 = userRepository.findById(userId);
+        Optional<User> user1 = userRepository.findById(id);
+
+        String encodedPassword = null;
+        if (userRequest.getPassword() != null){
+            encodedPassword = Base64.getEncoder().encodeToString(userRequest.getPassword().getBytes());
+            System.out.println("Encoded Password "+ encodedPassword);
+        }
 
         if (user1.isPresent()){
 
-            User user2 = user1.get();
+            User user = user1.get();
 
-            user2.setFirstName(userRequest.getFirstName());
-            user2.setLastName(userRequest.getLastName());
-            user2.setAddress(userRequest.getAddress());
-            user2.setEmail(userRequest.getEmail());
-            user2.setMobile(userRequest.getMobile());
-            user2.setPhone(userRequest.getPhone());
-            user2.setPassword(userRequest.getPassword());
-            user2.setRole(userRequest.getRole());
+            if (userRequest.getFirstName() != null){
+                user.setFirstName(userRequest.getFirstName());
+            }
+            if (userRequest.getLastName() != null){
+                user.setLastName(userRequest.getLastName());
+            }
+            if (userRequest.getAddress() != null){
+                user.setAddress(userRequest.getAddress());
+            }
+            if (userRequest.getEmail() != null){
+                user.setEmail(userRequest.getEmail());
+            }
+            if (userRequest.getMobile() != null) {
+                user.setMobile(userRequest.getMobile());
+            }
+            if (userRequest.getPhone() != null){
+                user.setPhone(userRequest.getPhone());
+            }
+            if (userRequest.getPassword() != null){
+                user.setPassword(encodedPassword);
+            }
 
-            userRepository.save(user2);
+            userRepository.save(user);
 
-            logger.info(userId+" updated successfully");
+            UserResponseDto userResponse = UserResponseDto.builder()
+                    .id(user.getId())
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .email(user.getEmail())
+                    .address(user.getAddress())
+                    .mobile(user.getMobile())
+                    .phone(user.getPhone())
+                    .role(user.getRole())
+                    .otp(user.getOtp())
+                    .otpVerify(user.isOtpVerify())
+                    .status(user.isStatus())
+                    .createdDate(user.getCreatedDate())
+                    .modifiedDate(user.getModifiedDate())
+                    .profileUrl(user.getProfileUrl())
+                    .profileName(user.getProfileName())
+                    .build();
+
+            logger.info(id+" updated successfully");
+            return userResponse;
+        }else {
+             throw new BadReqException("User id not present in DB");
         }
+
     }
 
     public UserResponseDto uploadImage(Long userId, MultipartFile image){

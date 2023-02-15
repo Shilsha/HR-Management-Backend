@@ -1,5 +1,6 @@
 package com.ca.controller;
 
+import com.ca.Apimessage.ApiMessage;
 import com.ca.entity.User;
 import com.ca.model.UserRequestDto;
 import com.ca.model.response.CustomerResponseDto;
@@ -7,7 +8,9 @@ import com.ca.model.response.SearchResponse;
 import com.ca.model.response.UserResponseDto;
 import com.ca.repository.UserRepository;
 import com.ca.service.UserService;
+import com.ca.utils.ApiResponse;
 import com.ca.utils.Role;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,46 +35,50 @@ public class UserController {
 
     //create
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody UserRequestDto userRequest) {
+    public ResponseEntity createUser(@RequestBody UserRequestDto userRequest) throws JsonProcessingException {
 
-        User user1 = userService.saveUser(userRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user1);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, userService.saveUser(userRequest), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
     //single user get
-    @GetMapping("/u")
-    public ResponseEntity<User> getSingleUser(@RequestParam String userId) {
+    @GetMapping("/get_user")
+    public ResponseEntity getSingleUser(@RequestParam String userId) throws JsonProcessingException {
         logger.info("Get Single User Handler: UserController");
-        User user = userService.getUser(Long.parseLong(userId));
-        logger.info(user.getFirstName());
-        return ResponseEntity.ok(user);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.getUser(Long.parseLong(userId)), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
     //all user get
     @GetMapping
-    public ResponseEntity<List<User>> getAllUser(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) {
-        List<User> allUser = userService.getAllUser(pageNumber, pageSize);
-        return ResponseEntity.ok(allUser);
+    public ResponseEntity getAllUser(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.getAllUser(pageNumber, pageSize), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
     @PutMapping
-    public void updateUser(@RequestBody UserRequestDto userRequest,@RequestParam Long userId){
+    public ResponseEntity updateUser(@RequestBody UserRequestDto userRequest,@RequestParam Long id) throws JsonProcessingException {
 
-        userService.updateUser(userRequest, userId);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.updateUser(userRequest, id), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<UserResponseDto> addProfile(@RequestParam Long userId, @RequestParam MultipartFile image){
+    public ResponseEntity addProfile(@RequestParam Long userId, @RequestParam MultipartFile image) throws JsonProcessingException {
 
-        return ResponseEntity.ok(userService.uploadImage(userId, image));
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.uploadImage(userId, image), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
-    @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable Long userId){
+    @DeleteMapping
+    public void deleteUser(@RequestParam Long userId){
         userService.deleteUser(userId);
     }
 
     @GetMapping("/search")
-    public List<SearchResponse> searchUser(@RequestParam String name, @RequestParam Role role){
-        return userService.searchUser(name,role);
+    public ResponseEntity searchUser(@RequestParam String name, @RequestParam Role role) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.searchUser(name,role), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 }

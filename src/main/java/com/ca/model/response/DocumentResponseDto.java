@@ -11,7 +11,6 @@ public class DocumentResponseDto {
 
     private Long id;
     private String docName;
-    private Long customerId;
-    private Long customerUserId;
+    private Long userId;
     private String docUrl;
 }

@@ -21,13 +21,11 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String docName;
-    private Long customerId;
-    private Long customerUserId;
+    private Long userId;
     private String docUrl;
     @CreatedDate
     private Date createdDate;
     @LastModifiedDate
     private Date modifiedDate;
-
-    private String service;
+    private Long serviceId;
 }

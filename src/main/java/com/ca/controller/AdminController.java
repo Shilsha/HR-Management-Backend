@@ -1,8 +1,13 @@
 package com.ca.controller;
 
+import com.ca.Apimessage.ApiMessage;
 import com.ca.entity.Admin;
 import com.ca.service.AdminService;
+import com.ca.utils.ApiResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,13 +21,17 @@ public class AdminController {
     private AdminService adminService;
 
     @PostMapping
-    public Admin create(@RequestBody Admin admin){
-        return adminService.create(admin);
+    public ResponseEntity create(@RequestBody Admin admin) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,adminService.create(admin), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
     @GetMapping
-    public List<Admin> getAllAdmin(){
-        return adminService.getAllAdmin();
+    public ResponseEntity getAllAdmin() throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,adminService.getAllAdmin(), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
     @GetMapping("/{adminId}")

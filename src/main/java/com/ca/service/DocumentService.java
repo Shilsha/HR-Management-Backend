@@ -44,9 +44,9 @@ public class DocumentService {
     @Value("${application.bucket.name}")
     private String bucketName;
 
-    public Document uploadDocument(Long customerId,Long customerUserId ,MultipartFile file) {
+    public Document uploadDocument(Long userId ,MultipartFile file) {
 
-        Optional<Customer> customer = customerRepository.findById(customerId);
+        Optional<Customer> customer = customerRepository.findByUserId(userId);
 
         if (!customer.isPresent()) {
             throw new BadReqException("Customer Not Present");
@@ -70,8 +70,7 @@ public class DocumentService {
 
             document = Document.builder()
                     .docName(fileName)
-                    .customerId(customerId)
-                    .customerUserId(customerUserId)
+                    .userId(userId)
                     .docUrl(documentUrl)
                     .build();
 
@@ -91,10 +90,10 @@ public class DocumentService {
         return document;
     }
 
-    public List<Document> getDocument(Long customerId, Integer pageNumber, Integer pageSize) {
+    public List<Document> getDocument(Long userId, Integer pageNumber, Integer pageSize) {
 
         Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        Page<Document> pageDocument = documentRepository.findAll(pageable);
+        Page<Document> pageDocument = documentRepository.findByUserId(userId, pageable);
         List<Document> documentList = pageDocument.getContent();
 
         if (documentList.isEmpty()){
@@ -115,8 +114,7 @@ public class DocumentService {
         for (Document document1: document){
             DocumentResponseDto documentResponse = DocumentResponseDto.builder()
                     .id(document1.getId())
-                    .customerId(document1.getCustomerId())
-                    .customerUserId(document1.getCustomerUserId())
+                    .userId(document1.getUserId())
                     .docName(document1.getDocName())
                     .docUrl(document1.getDocUrl())
                     .build();

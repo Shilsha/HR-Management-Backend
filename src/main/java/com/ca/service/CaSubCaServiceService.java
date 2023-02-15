@@ -48,7 +48,7 @@ public class CaSubCaServiceService {
 
         logger.info("Get service of user id {}",userId);
         Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        Page<CaSubCaService> pageService = caSubCaServiceRepository.findAll(pageable);
+        Page<CaSubCaService> pageService = caSubCaServiceRepository.findByUserid(userId,pageable);
         List<CaSubCaService> caSubCaServices = pageService.getContent();
         return caSubCaServices;
     }
