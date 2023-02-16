@@ -54,6 +54,8 @@ public class UserService {
     @Autowired
     private SubCARepository subCARepository;
 
+//    <----------------------------------- Add User --------------------------------------->
+
     public UserResponseDto saveUser(UserRequestDto userRequest) {
         logger.info("Creating new user : {} ", userRequest.getEmail() );
 
@@ -178,6 +180,8 @@ public class UserService {
         return users;
     }
 
+//    <------------------------------------ Update User -------------------------------------->
+
     public UserResponseDto updateUser(UserRequestDto userRequest, Long id) {
 
         Optional<User> user1 = userRepository.findById(id);
@@ -242,6 +246,8 @@ public class UserService {
 
     }
 
+//    <------------------------------ Upload Profile Image ---------------------------------------->
+
     public UserResponseDto uploadImage(Long userId, MultipartFile image){
 
         Optional<User> user = userRepository.findById(userId);
@@ -263,13 +269,12 @@ public class UserService {
         }
 
         Double imageSize = image.getSize() * 0.00000095367432;
-        System.out.println("Size "+imageSize);
-        if (!(imageSize <= 2)){
+        logger.info("Size of image : {}",imageSize);
+        if (imageSize > 2){
             throw new BadReqException("Image size is more than 2MB");
         }
 
         try{
-            Document document = new Document();
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentLength(image.getSize());
             amazonS3.putObject(new PutObjectRequest(bucketName, profileName, image.getInputStream(), metadata)
@@ -317,9 +322,13 @@ public class UserService {
 
     //    <------------------------------------Search User---------------------------------------------->
 
-    public List<SearchResponse> searchUser(String name, Role role) {
-        int r = role.ordinal();
-        List<User> user1 = userRepository.findNameStartWith(r, name);
+    public List<SearchResponse> searchUser(String name, Role role, Integer pageNumber, Integer pageSize) {
+        int userRole = role.ordinal();
+
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Page<User> pageUser = userRepository.findNameStartWith(userRole, name, pageable);
+        List<User> user1 = pageUser.getContent();
+
         List<SearchResponse> searchResponse = new ArrayList<>();
 
         for (User user: user1){

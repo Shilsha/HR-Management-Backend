@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+
 public class DocumentService {
 
     @Autowired
@@ -43,6 +44,10 @@ public class DocumentService {
     private Logger logger = LoggerFactory.getLogger(UserService.class);
     @Value("${application.bucket.name}")
     private String bucketName;
+    @Value("${application.max-file-size}")
+    private Double maxFileSize;
+    @Value("${application.min-file-size}")
+    private Double minFileSize;
 
     public Document uploadDocument(Long userId ,MultipartFile file) {
 
@@ -54,40 +59,57 @@ public class DocumentService {
 
         String fileName = file.getOriginalFilename();
         String extension = fileName.substring(fileName.lastIndexOf("."));
+        logger.info("Extension of file : {}",extension);
         String fileNameWithoutExt = FilenameUtils.removeExtension(fileName);
         fileName = fileNameWithoutExt + "" + System.currentTimeMillis() + "" + extension;
         logger.info("File name {}",fileName);
 
-        Document document = new Document();
-        try {
-            ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setContentLength(file.getSize());
-            amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata)
-                    .withCannedAcl(CannedAccessControlList.PublicReadWrite));
+        if (extension.equals(".png") || extension.equals(".jpg")
+                || extension.equals(".docx") || extension.equals(".svg")
+                || extension.equals(".pdf") || extension.equals(".word") || extension.equals(".xlsx")) {
 
-            String documentUrl = "https://ebench-images.s3.ap-south-1.amazonaws.com/" + fileName;
-            System.out.println(documentUrl);
+            Double fileSizeInBytes = (double) file.getSize();
+            logger.info("File size in Byte {}",fileSizeInBytes);
+            Double fileSizeInKB = fileSizeInBytes / 1024;
+            logger.info("File size in KB {}",fileSizeInKB);
 
-            document = Document.builder()
-                    .docName(fileName)
-                    .userId(userId)
-                    .docUrl(documentUrl)
-                    .build();
+            if(fileSizeInKB > maxFileSize || fileSizeInKB < minFileSize){
+                throw new BadReqException("File size min 2KB and max 5MB");
+            }
 
-            return documentRepository.save(document);
+            Document document = new Document();
+            try {
+                ObjectMetadata metadata = new ObjectMetadata();
+                metadata.setContentLength(file.getSize());
+                amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file.getInputStream(), metadata)
+                        .withCannedAcl(CannedAccessControlList.PublicReadWrite));
 
-        } catch (IOException ioe) {
-            logger.error("IOException: " + ioe.getMessage());
-        } catch (AmazonServiceException serviceException) {
-            logger.info("AmazonServiceException: " + serviceException.getMessage());
-            throw serviceException;
-        } catch (AmazonClientException clientException) {
-            logger.info("AmazonClientException Message: " + clientException.getMessage());
-            throw clientException;
+                String documentUrl = "https://ebench-images.s3.ap-south-1.amazonaws.com/" + fileName;
+                System.out.println(documentUrl);
+
+                document = Document.builder()
+                        .docName(fileName)
+                        .userId(userId)
+                        .docUrl(documentUrl)
+                        .build();
+
+                return documentRepository.save(document);
+
+            } catch (IOException ioe) {
+                logger.error("IOException: " + ioe.getMessage());
+            } catch (AmazonServiceException serviceException) {
+                logger.info("AmazonServiceException: " + serviceException.getMessage());
+                throw serviceException;
+            } catch (AmazonClientException clientException) {
+                logger.info("AmazonClientException Message: " + clientException.getMessage());
+                throw clientException;
+            }
+
+            logger.info("Document uploaded successfully");
+            return document;
+        }else {
+            throw new BadReqException("Only (.jpg, .pdf, .word, .docx, .svg, .png, .xlsx) type of file are allowed!!");
         }
-
-        logger.info("Document uploaded successfully");
-        return document;
     }
 
     public List<Document> getDocument(Long userId, Integer pageNumber, Integer pageSize) {
@@ -105,9 +127,12 @@ public class DocumentService {
         }
     }
 
-    public List<DocumentResponseDto> searchDocument(String docName) {
+    public List<DocumentResponseDto> searchDocument(String docName, Integer pageNumber, Integer pageSize) {
 
-        List<Document> document = documentRepository.findByName(docName);
+        Pageable pageable = PageRequest.of(pageNumber,pageSize);
+        Page<Document> pageDocument = documentRepository.findByName(docName,pageable);
+        List<Document> document = pageDocument.getContent();
+
         List<DocumentResponseDto> documentResponseList = new ArrayList<>();
         logger.info("Search Document name start from {}",docName);
 

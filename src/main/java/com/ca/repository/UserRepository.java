@@ -2,6 +2,8 @@ package com.ca.repository;
 
 import com.ca.entity.User;
 import com.ca.utils.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,5 +20,5 @@ public interface UserRepository extends JpaRepository<User,Long> {
     User findByEmail(String email);
 
     @Query(value = "select * from user u where role=?1 and first_name like CONCAT(?2,'%')", nativeQuery = true)
-    List<User> findNameStartWith(int role, String name);
+    Page<User> findNameStartWith(int role, String name, Pageable pageable);
 }

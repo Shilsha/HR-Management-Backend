@@ -76,9 +76,9 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity searchUser(@RequestParam String name, @RequestParam Role role) throws JsonProcessingException {
+    public ResponseEntity searchUser(@RequestParam String name, @RequestParam Role role,@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.searchUser(name,role), ApiMessage.Api_Message);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.searchUser(name,role, pageNumber, pageSize), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 }

@@ -1,10 +1,14 @@
 package com.ca.controller;
 
+import com.ca.Apimessage.ApiMessage;
 import com.ca.entity.Document;
 import com.ca.model.response.DocumentResponseDto;
 import com.ca.service.DocumentService;
+import com.ca.utils.ApiResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,21 +25,26 @@ public class DocumentController {
     private DocumentService documentService;
 
     @PostMapping("/upload")
-    public ResponseEntity<Document> uploadDocument(@RequestParam Long userId,
-                                         @RequestParam MultipartFile file){
+    public ResponseEntity uploadDocument(@RequestParam Long userId,
+                                         @RequestParam("file") MultipartFile file) throws JsonProcessingException {
 
-        return ResponseEntity.ok(documentService.uploadDocument(userId,file));
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,documentService.uploadDocument(userId,file), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
+
     }
 
     @GetMapping
-    public List<Document> getDocument(@RequestParam Long userId,@RequestParam Integer pageNumber, @RequestParam Integer pageSize){
+    public ResponseEntity getDocument(@RequestParam Long userId,@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
-        return documentService.getDocument(userId, pageNumber, pageSize);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,documentService.getDocument(userId, pageNumber, pageSize), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
     @GetMapping("/search")
-    public List<DocumentResponseDto> searchDocument(@RequestParam String docName){
-        return documentService.searchDocument(docName);
+    public ResponseEntity searchDocument(@RequestParam String docName, @RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,documentService.searchDocument(docName, pageNumber, pageSize), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
 }
