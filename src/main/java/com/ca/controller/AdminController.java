@@ -28,9 +28,9 @@ public class AdminController {
     }
 
     @GetMapping
-    public ResponseEntity getAllAdmin() throws JsonProcessingException {
+    public ResponseEntity getAllAdmin(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,adminService.getAllAdmin(), ApiMessage.Api_Message);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,adminService.getAllAdmin(pageNumber, pageSize), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 

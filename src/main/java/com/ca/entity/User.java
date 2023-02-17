@@ -44,8 +44,9 @@ public class User {
     private Date createdDate;
     @LastModifiedDate
     private Date modifiedDate;
-
     private String profileUrl;
     private String profileName;
+    private String gender;
+    private String panCardNumber;
 
 }

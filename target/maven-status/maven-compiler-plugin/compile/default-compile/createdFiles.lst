@@ -18,7 +18,6 @@ com\ca\entity\User.class
 com\ca\config\JwtAuthenticationEntryPoint.class
 com\ca\entity\SubCA$SubCABuilder.class
 com\ca\CAHandlerApplication.class
-com\ca\model\CustomerDto.class
 com\ca\model\response\DocumentResponseDto$DocumentResponseDtoBuilder.class
 com\ca\repository\CARepository.class
 com\ca\model\response\SearchResponse.class
@@ -43,7 +42,6 @@ com\ca\entity\Customer.class
 com\ca\model\request\LoginRequest$LoginRequestBuilder.class
 com\ca\entity\Notification$NotificationBuilder.class
 com\ca\service\CAService.class
-com\ca\model\UserRequestDto.class
 com\ca\entity\Admin$AdminBuilder.class
 com\ca\repository\SubCARepository.class
 com\ca\model\response\UserResponseDto$UserResponseDtoBuilder.class
@@ -67,6 +65,7 @@ com\ca\service\EmailService.class
 com\ca\model\request\OtpVerifyRequest$OtpVerifyRequestBuilder.class
 com\ca\repository\UserRepository.class
 com\ca\controller\SubCAController.class
+com\ca\model\request\UserRequestDto.class
 com\ca\entity\CA$CABuilder.class
 com\ca\controller\DocumentController.class
 com\ca\controller\LoginController.class

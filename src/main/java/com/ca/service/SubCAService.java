@@ -6,6 +6,7 @@ import com.ca.entity.SubCA;
 import com.ca.entity.User;
 import com.ca.model.response.SubCAResponseDto;
 import com.ca.model.response.SubCAServiceResponseDto;
+import com.ca.model.response.UserResponseDto;
 import com.ca.repository.CaSubCaServiceRepository;
 import com.ca.repository.NotificationRepository;
 import com.ca.repository.SubCARepository;
@@ -41,12 +42,46 @@ public class SubCAService {
         return subCARepository.save(subCA);
     }
 
-    public List<SubCA> getAllSubCA(Integer pageNumber, Integer pageSize){
+    public List<UserResponseDto> getAllSubCA(Integer pageNumber, Integer pageSize){
         logger.info("Getting all SubCA");
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        Page<SubCA> pageSubCa = subCARepository.findAll(pageable);
-        List<SubCA> subCA = pageSubCa.getContent();
-        return subCA;
+        int role = 3;
+        List<User> user = new ArrayList<>();
+
+        if (pageNumber == -1 && pageSize == -1){
+            user = userRepository.findByRole(role);
+        }else {
+            Pageable pageable = PageRequest.of(pageNumber,pageSize);
+            Page<User> userPage = userRepository.findByrole(role, pageable);
+            user = userPage.getContent();
+        }
+
+        List<UserResponseDto> userResponse = new ArrayList<>();
+
+        for (User user1: user) {
+            UserResponseDto userResponseDto = UserResponseDto.builder()
+                    .id(user1.getId())
+                    .firstName(user1.getFirstName())
+                    .lastName(user1.getLastName())
+                    .email(user1.getEmail())
+                    .address(user1.getAddress())
+                    .mobile(user1.getMobile())
+                    .phone(user1.getPhone())
+                    .role(user1.getRole())
+                    .otp(user1.getOtp())
+                    .otpVerify(user1.isOtpVerify())
+                    .status(user1.isStatus())
+                    .createdDate(user1.getCreatedDate())
+                    .modifiedDate(user1.getModifiedDate())
+                    .profileUrl(user1.getProfileUrl())
+                    .profileName(user1.getProfileName())
+                    .gender(user1.getGender())
+                    .panCardNumber(user1.getPanCardNumber())
+                    .build();
+
+            userResponse.add(userResponseDto);
+        }
+
+        return userResponse;
     }
 
     public SubCA getSingleSubCA(Long id){

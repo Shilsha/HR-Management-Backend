@@ -25,5 +25,7 @@ public class UserResponseDto {
     private Date modifiedDate;
     private String profileUrl;
     private String profileName;
+    private String gender;
+    private String panCardNumber;
 
 }

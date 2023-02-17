@@ -8,7 +8,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ca.entity.*;
 import com.ca.exception.BadReqException;
-import com.ca.model.UserRequestDto;
+import com.ca.model.request.UserRequestDto;
 import com.ca.model.response.SearchResponse;
 import com.ca.model.response.UserResponseDto;
 import com.ca.repository.*;
@@ -86,6 +86,8 @@ public class UserService {
                 .otpVerify(false)
                 .profileUrl(null)
                 .profileName(null)
+                .gender(userRequest.getGender())
+                .panCardNumber(userRequest.getPanCardNumber())
                 .build();
 
         userRepository.save(user);
@@ -106,6 +108,8 @@ public class UserService {
                 .modifiedDate(user.getModifiedDate())
                 .profileUrl(user.getProfileUrl())
                 .profileName(user.getProfileName())
+                .panCardNumber(user.getPanCardNumber())
+                .gender(user.getGender())
                 .build();
 
 
@@ -171,12 +175,21 @@ public class UserService {
         return user;
     }
 
+//    <--------------------------------- Get all User --------------------------------------------->
+
     public List<User> getAllUser(Integer pageNumber, Integer pageSize)
     {
+        List<User> users = new ArrayList<>();
+
+        if (pageNumber == -1 && pageSize == -1){
+            users = userRepository.findAll();
+        }else {
+            Pageable pageable = PageRequest.of(pageNumber,pageSize);
+            Page<User> pageUser = userRepository.findAll(pageable);
+            users = pageUser.getContent();
+        }
         logger.info("Getting all user");
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        Page<User> pageUser = userRepository.findAll(pageable);
-        List<User> users = pageUser.getContent();
+
         return users;
     }
 
@@ -217,6 +230,12 @@ public class UserService {
             if (userRequest.getPassword() != null){
                 user.setPassword(encodedPassword);
             }
+            if (userRequest.getPanCardNumber() != null){
+                user.setPanCardNumber(userRequest.getPanCardNumber());
+            }
+            if (userRequest.getGender() != null){
+                user.setGender(userRequest.getGender());
+            }
 
             userRepository.save(user);
 
@@ -236,6 +255,8 @@ public class UserService {
                     .modifiedDate(user.getModifiedDate())
                     .profileUrl(user.getProfileUrl())
                     .profileName(user.getProfileName())
+                    .gender(user.getGender())
+                    .panCardNumber(user.getPanCardNumber())
                     .build();
 
             logger.info(id+" updated successfully");
@@ -315,6 +336,8 @@ public class UserService {
                 .modifiedDate(user1.getModifiedDate())
                 .profileUrl(user1.getProfileUrl())
                 .profileName(user1.getProfileName())
+                .gender(user1.getGender())
+                .panCardNumber(user1.getPanCardNumber())
                 .build();
 
         return userResponse;
@@ -324,10 +347,15 @@ public class UserService {
 
     public List<SearchResponse> searchUser(String name, Role role, Integer pageNumber, Integer pageSize) {
         int userRole = role.ordinal();
+        List<User> user1 = new ArrayList<>();
 
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        Page<User> pageUser = userRepository.findNameStartWith(userRole, name, pageable);
-        List<User> user1 = pageUser.getContent();
+        if (pageNumber == -1 && pageSize == -1){
+            user1 = userRepository.findNameStartwith(userRole, name);
+        }else {
+            Pageable pageable = PageRequest.of(pageNumber,pageSize);
+            Page<User> pageUser = userRepository.findNameStartWith(userRole, name, pageable);
+            user1 = pageUser.getContent();
+        }
 
         List<SearchResponse> searchResponse = new ArrayList<>();
 

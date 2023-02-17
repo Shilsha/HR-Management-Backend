@@ -1,8 +1,6 @@
 package com.ca.controller;
 
 import com.ca.Apimessage.ApiMessage;
-import com.ca.entity.Document;
-import com.ca.model.response.DocumentResponseDto;
 import com.ca.service.DocumentService;
 import com.ca.utils.ApiResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,7 +39,7 @@ public class DocumentController {
     @GetMapping("/search")
     public ResponseEntity searchDocument(@RequestParam String docName, @RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,documentService.searchDocument(docName, pageNumber, pageSize), ApiMessage.Api_Message);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,documentService.searchDocument(docName,pageNumber,pageSize), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 

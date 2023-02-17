@@ -1,5 +1,6 @@
 package com.ca.repository;
 
+import com.ca.entity.Customer;
 import com.ca.entity.User;
 import com.ca.utils.Role;
 import org.springframework.data.domain.Page;
@@ -21,4 +22,13 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query(value = "select * from user u where role=?1 and first_name like CONCAT(?2,'%')", nativeQuery = true)
     Page<User> findNameStartWith(int role, String name, Pageable pageable);
+
+    @Query(value = "select * from user u where role=?1 and first_name like CONCAT(?2,'%')", nativeQuery = true)
+    List<User> findNameStartwith(int role, String name);
+
+    @Query(value = "select * from user u where role=?1", nativeQuery = true)
+    List<User> findByRole(int role);
+
+    @Query(value = "select * from user u where role=?1", nativeQuery = true)
+    Page<User> findByrole(int role,Pageable pageable);
 }

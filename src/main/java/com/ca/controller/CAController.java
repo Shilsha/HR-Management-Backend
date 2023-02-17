@@ -1,9 +1,15 @@
 package com.ca.controller;
 
+import com.ca.Apimessage.ApiMessage;
 import com.ca.entity.CA;
 import com.ca.model.response.CaServiceResponseDto;
+import com.ca.model.response.UserResponseDto;
 import com.ca.service.CAService;
+import com.ca.utils.ApiResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,18 +23,24 @@ public class CAController {
     private CAService caService;
 
     @PostMapping
-    public CA createCA(@RequestBody CA ca){
-        return caService.createCA(ca);
+    public ResponseEntity createCA(@RequestBody CA ca) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caService.createCA(ca), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
     @GetMapping
-    public List<CA> getAllCA(@RequestParam Integer pageNumber, @RequestParam Integer pageSize){
-        return caService.getAllCA(pageNumber, pageSize);
+    public ResponseEntity getAllCA(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caService.getAllCA(pageNumber, pageSize), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
     @GetMapping("/service")
-    public List<CaServiceResponseDto> getService(@RequestParam Long caId){
-        return caService.getService(caId);
+    public ResponseEntity getService(@RequestParam Long caId) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caService.getService(caId), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
     @PutMapping("/{caID}")

@@ -20,4 +20,10 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     @Query(value = "select * from document d where user_id=?1",nativeQuery = true)
     Page<Document> findByUserId(Long userId, Pageable pageable);
+
+    @Query(value = "select * from document d where user_id=?1",nativeQuery = true)
+    List<Document> findByUserid(Long userId);
+
+    @Query(value = "select * from document d where doc_name like CONCAT(?1, '%')", nativeQuery = true)
+    List<Document> findByname(String docName);
 }

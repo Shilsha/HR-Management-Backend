@@ -1,4 +1,4 @@
-package com.ca.model;
+package com.ca.model.request;
 
 import com.ca.utils.Role;
 import lombok.Getter;
@@ -19,9 +19,10 @@ public class UserRequestDto {
     private String password;
     private Role role;
     private String adminRole;
-
     private Long adminId;
     private Long caId;
     private Long addedBy;
+    private String gender;
+    private String panCardNumber;
 
 }

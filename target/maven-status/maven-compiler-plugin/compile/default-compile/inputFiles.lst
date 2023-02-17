@@ -14,6 +14,7 @@ D:\CA\CA-Java\src\main\java\com\ca\entity\User.java
 D:\CA\CA-Java\src\main\java\com\ca\controller\DocumentController.java
 D:\CA\CA-Java\src\main\java\com\ca\entity\SubCA.java
 D:\CA\CA-Java\src\main\java\com\ca\config\AwsS3ClientConfig.java
+D:\CA\CA-Java\src\main\java\com\ca\model\request\UserRequestDto.java
 D:\CA\CA-Java\src\main\java\com\ca\service\DocumentService.java
 D:\CA\CA-Java\src\main\java\com\ca\service\NotificationService.java
 D:\CA\CA-Java\src\main\java\com\ca\service\SubCAService.java
@@ -23,7 +24,6 @@ D:\CA\CA-Java\src\main\java\com\ca\service\CAService.java
 D:\CA\CA-Java\src\main\java\com\ca\service\OtpService.java
 D:\CA\CA-Java\src\main\java\com\ca\controller\SubCAController.java
 D:\CA\CA-Java\src\main\java\com\ca\model\SubCADto.java
-D:\CA\CA-Java\src\main\java\com\ca\model\CustomerDto.java
 D:\CA\CA-Java\src\main\java\com\ca\model\response\CustomerResponseDto.java
 D:\CA\CA-Java\src\main\java\com\ca\controller\CAController.java
 D:\CA\CA-Java\src\main\java\com\ca\model\response\LoginResponse.java
@@ -32,7 +32,6 @@ D:\CA\CA-Java\src\main\java\com\ca\Apimessage\ApiMessage.java
 D:\CA\CA-Java\src\main\java\com\ca\config\SecurityConfig.java
 D:\CA\CA-Java\src\main\java\com\ca\service\EmailService.java
 D:\CA\CA-Java\src\main\java\com\ca\exception\ExceptionResponse.java
-D:\CA\CA-Java\src\main\java\com\ca\model\UserRequestDto.java
 D:\CA\CA-Java\src\main\java\com\ca\config\JwtRequestFilter.java
 D:\CA\CA-Java\src\main\java\com\ca\entity\CA.java
 D:\CA\CA-Java\src\main\java\com\ca\controller\NotificationController.java

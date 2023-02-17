@@ -8,7 +8,6 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ca.entity.Customer;
 import com.ca.entity.Document;
-import com.ca.entity.User;
 import com.ca.exception.BadReqException;
 import com.ca.model.response.DocumentResponseDto;
 import com.ca.repository.CustomerRepository;
@@ -21,12 +20,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.print.Doc;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -114,13 +113,22 @@ public class DocumentService {
 
     public List<Document> getDocument(Long userId, Integer pageNumber, Integer pageSize) {
 
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        Page<Document> pageDocument = documentRepository.findByUserId(userId, pageable);
-        List<Document> documentList = pageDocument.getContent();
+        List<Document> documentList = new ArrayList<>();
+
+        if (pageNumber == -1 && pageSize == -1){
+            logger.info("Pagination not present");
+            documentList = documentRepository.findByUserid(userId);
+        }else {
+            logger.info("Pagination present pageNumber :{}",pageNumber);
+            logger.info("PageSize :{}",pageSize);
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            Page<Document> pageDocument = documentRepository.findByUserId(userId, pageable);
+            documentList = pageDocument.getContent();
+        }
 
         if (documentList.isEmpty()){
             logger.info("Customer id not present in DB");
-            throw new BadReqException("CustomerId not found");
+            throw new BadReqException("Customer not found");
         }else {
             logger.info("Document List send successfully");
             return documentList;
@@ -129,9 +137,15 @@ public class DocumentService {
 
     public List<DocumentResponseDto> searchDocument(String docName, Integer pageNumber, Integer pageSize) {
 
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        Page<Document> pageDocument = documentRepository.findByName(docName,pageable);
-        List<Document> document = pageDocument.getContent();
+        List<Document> document = new ArrayList<>();
+
+        if (pageNumber == -1 && pageSize == -1){
+            document = documentRepository.findByname(docName);
+        }else {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            Page<Document> pageDocument = documentRepository.findByName(docName,pageable);
+            document = pageDocument.getContent();
+        }
 
         List<DocumentResponseDto> documentResponseList = new ArrayList<>();
         logger.info("Search Document name start from {}",docName);

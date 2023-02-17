@@ -1,11 +1,7 @@
 package com.ca.controller;
 
 import com.ca.Apimessage.ApiMessage;
-import com.ca.entity.User;
-import com.ca.model.UserRequestDto;
-import com.ca.model.response.CustomerResponseDto;
-import com.ca.model.response.SearchResponse;
-import com.ca.model.response.UserResponseDto;
+import com.ca.model.request.UserRequestDto;
 import com.ca.repository.UserRepository;
 import com.ca.service.UserService;
 import com.ca.utils.ApiResponse;
@@ -18,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/users")

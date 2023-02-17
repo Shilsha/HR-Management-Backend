@@ -1,10 +1,9 @@
 package com.ca.service;
 
 import com.ca.entity.Customer;
-import com.ca.entity.SubCA;
 import com.ca.entity.User;
 import com.ca.model.response.CustomerResponseDto;
-import com.ca.model.response.SubCAResponseDto;
+import com.ca.model.response.UserResponseDto;
 import com.ca.repository.CustomerRepository;
 import com.ca.repository.UserRepository;
 import org.slf4j.Logger;
@@ -13,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +33,45 @@ public class CustomerService {
         return customerRepository.save(customer);
     }
 
-    public List<Customer> getAllCustomer(Integer pageNumber, Integer pageSize){
+    public List<UserResponseDto> getAllCustomer(Integer pageNumber, Integer pageSize){
         logger.info("Getting all customers");
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        Page<Customer> pageCustomer = customerRepository.findAll(pageable);
-        List<Customer> customers = pageCustomer.getContent();
-        return customers;
+        List<User> customers = new ArrayList<>();
+        int role = 2; //CUSTOMER
+
+        if (pageNumber == -1 && pageSize == -1){
+            customers = userRepository.findByRole(role);
+        }else {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            Page<User> pageCustomer = userRepository.findByrole(role,pageable);
+            customers = pageCustomer.getContent();
+        }
+
+        List<UserResponseDto> userResponse = new ArrayList<>();
+
+        for (User user1: customers) {
+            UserResponseDto userResponseDto = UserResponseDto.builder()
+                    .id(user1.getId())
+                    .firstName(user1.getFirstName())
+                    .lastName(user1.getLastName())
+                    .email(user1.getEmail())
+                    .address(user1.getAddress())
+                    .mobile(user1.getMobile())
+                    .phone(user1.getPhone())
+                    .role(user1.getRole())
+                    .otp(user1.getOtp())
+                    .otpVerify(user1.isOtpVerify())
+                    .status(user1.isStatus())
+                    .createdDate(user1.getCreatedDate())
+                    .modifiedDate(user1.getModifiedDate())
+                    .profileUrl(user1.getProfileUrl())
+                    .profileName(user1.getProfileName())
+                    .gender(user1.getGender())
+                    .panCardNumber(user1.getPanCardNumber())
+                    .build();
+
+            userResponse.add(userResponseDto);
+        }
+        return userResponse;
     }
 
     public Customer getCustomer(Long customerId){
