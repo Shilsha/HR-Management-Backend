@@ -127,8 +127,8 @@ public class DocumentService {
         }
 
         if (documentList.isEmpty()){
-            logger.info("Customer id not present in DB");
-            throw new BadReqException("Customer not found");
+            logger.info("No document uploaded by customer");
+            throw new BadReqException("No Document uploaded by the customer");
         }else {
             logger.info("Document List send successfully");
             return documentList;

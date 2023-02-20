@@ -39,6 +39,7 @@ public class CustomerController {
         return apiResponse.getResponse(apiResponse);
     }
 
+    @Deprecated
     @GetMapping("/{customerId}")
     public ResponseEntity getCustomer(@PathVariable("customerId") Long customerId) throws JsonProcessingException {
 
@@ -46,10 +47,16 @@ public class CustomerController {
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/{caId}")
-    public ResponseEntity getCustomerOfCA(@RequestParam Long caId) throws JsonProcessingException {
+    @GetMapping("/userId")
+    public ResponseEntity getCustomerByUserId(@RequestParam Long id) throws JsonProcessingException {
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, customerService.getCustomerByUserId(id), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
+    }
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, customerService.getCustomerOfCA(caId), ApiMessage.Api_Message);
+    @GetMapping("/caId")
+    public ResponseEntity getCustomerOfCA(@RequestParam Long id, @RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, customerService.getCustomerByCAId(id, pageNumber, pageSize), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 

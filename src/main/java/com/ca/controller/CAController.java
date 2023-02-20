@@ -36,6 +36,12 @@ public class CAController {
         return apiResponse.getResponse(apiResponse);
     }
 
+    @GetMapping("/id")
+    public ResponseEntity getCAById(@RequestParam Long id) throws JsonProcessingException {
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caService.getCAById(id), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
+    }
+
     @GetMapping("/service")
     public ResponseEntity getService(@RequestParam Long caId) throws JsonProcessingException {
 

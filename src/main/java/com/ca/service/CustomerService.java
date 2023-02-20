@@ -1,7 +1,9 @@
 package com.ca.service;
 
+import com.amazonaws.services.apigateway.model.Op;
 import com.ca.entity.Customer;
 import com.ca.entity.User;
+import com.ca.exception.BadReqException;
 import com.ca.model.response.CustomerResponseDto;
 import com.ca.model.response.UserResponseDto;
 import com.ca.repository.CustomerRepository;
@@ -93,10 +95,17 @@ public class CustomerService {
         customerRepository.deleteById(customerId);
     }
 
-    public List<CustomerResponseDto> getCustomerOfCA(Long caId) {
-        logger.info("Getting customer have CA id {}",caId);
+    public List<CustomerResponseDto> getCustomerByCAId(Long caUserId, Integer pageNumber, Integer pageSize) {
+        logger.info("Getting customer by CA id {}",caUserId);
+        List<Customer> customers = new ArrayList<>();
 
-        List<Customer> customers = customerRepository.findByCAId(caId);
+        if (pageNumber == -1 && pageSize == -1){
+            customers = customerRepository.findByCAId(caUserId);
+        }else {
+            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            Page<Customer> pageCustomer = customerRepository.findByCAid(caUserId,pageable);
+            customers = pageCustomer.getContent();
+        }
 
         List<CustomerResponseDto> customerResponse = new ArrayList<>();
 
@@ -111,10 +120,47 @@ public class CustomerService {
                     .address(user.getAddress())
                     .mobile(user.getMobile())
                     .phone(user.getPhone())
+                    .panCardNumber(user.getPanCardNumber())
+                    .gender(user.getGender())
                     .build();
 
             customerResponse.add(customer);
         }
         return customerResponse;
+    }
+
+    public UserResponseDto getCustomerByUserId(Long userId) {
+        logger.info("Get Customer by user id {}",userId);
+
+        int role = 2;
+
+        Optional<User> user = userRepository.findByUserId(userId,role);
+        if (!user.isPresent()){
+            throw new BadReqException("Customer Not present in DB id :"+userId);
+        }
+
+        User user1 = user.get();
+
+        UserResponseDto userResponse = UserResponseDto.builder()
+                .id(user1.getId())
+                .firstName(user1.getFirstName())
+                .lastName(user1.getLastName())
+                .email(user1.getEmail())
+                .address(user1.getAddress())
+                .mobile(user1.getMobile())
+                .phone(user1.getPhone())
+                .role(user1.getRole())
+                .otp(user1.getOtp())
+                .otpVerify(user1.isOtpVerify())
+                .status(user1.isStatus())
+                .createdDate(user1.getCreatedDate())
+                .modifiedDate(user1.getModifiedDate())
+                .profileUrl(user1.getProfileUrl())
+                .profileName(user1.getProfileName())
+                .gender(user1.getGender())
+                .panCardNumber(user1.getPanCardNumber())
+                .build();
+
+        return userResponse;
     }
 }

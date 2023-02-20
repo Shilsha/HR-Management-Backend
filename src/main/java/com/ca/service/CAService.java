@@ -129,4 +129,39 @@ public class CAService {
             throw new BadReqException("CA id does not exist");
         }
     }
+
+    public UserResponseDto getCAById(Long userId) {
+        logger.info("Getting CA by its userId {}",userId);
+
+        int role = 1;
+        Optional<User> user = userRepository.findByUserId(userId, role);
+
+        if (!user.isPresent()){
+            throw new BadReqException("CA not present in DB : "+userId);
+        }
+
+        User user1 = user.get();
+
+        UserResponseDto userResponse = UserResponseDto.builder()
+                .id(user1.getId())
+                .firstName(user1.getFirstName())
+                .lastName(user1.getLastName())
+                .email(user1.getEmail())
+                .address(user1.getAddress())
+                .mobile(user1.getMobile())
+                .phone(user1.getPhone())
+                .role(user1.getRole())
+                .otp(user1.getOtp())
+                .otpVerify(user1.isOtpVerify())
+                .status(user1.isStatus())
+                .createdDate(user1.getCreatedDate())
+                .modifiedDate(user1.getModifiedDate())
+                .profileUrl(user1.getProfileUrl())
+                .profileName(user1.getProfileName())
+                .gender(user1.getGender())
+                .panCardNumber(user1.getPanCardNumber())
+                .build();
+
+        return userResponse;
+    }
 }

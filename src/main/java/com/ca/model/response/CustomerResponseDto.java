@@ -19,4 +19,6 @@ public class CustomerResponseDto {
     private String address;
     private String mobile;
     private String phone;
+    private String panCardNumber;
+    private String gender;
 }
