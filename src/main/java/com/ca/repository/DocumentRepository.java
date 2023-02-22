@@ -1,6 +1,7 @@
 package com.ca.repository;
 
 import com.ca.entity.Document;
+import com.ca.model.response.DocumentResponseDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

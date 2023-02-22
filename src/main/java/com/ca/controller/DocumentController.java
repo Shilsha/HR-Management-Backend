@@ -22,9 +22,9 @@ public class DocumentController {
 
     @PostMapping("/upload_document")
     public ResponseEntity uploadDocument(@RequestParam Long userId,
-                                         @RequestParam("file") MultipartFile file) throws JsonProcessingException {
+                                         @RequestParam("file") MultipartFile file, @RequestParam Long serviceId) throws JsonProcessingException {
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,documentService.uploadDocument(userId,file), ApiMessage.Api_Message);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,documentService.uploadDocument(userId,file, serviceId), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
 
     }

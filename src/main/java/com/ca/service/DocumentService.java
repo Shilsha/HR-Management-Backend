@@ -8,8 +8,10 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ca.entity.Customer;
 import com.ca.entity.Document;
+import com.ca.entity.Service;
 import com.ca.exception.BadReqException;
 import com.ca.model.response.DocumentResponseDto;
+import com.ca.repository.CaServiceRepository;
 import com.ca.repository.CustomerRepository;
 import com.ca.repository.DocumentRepository;
 import org.slf4j.Logger;
@@ -19,19 +21,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FilenameUtils;
 
-import javax.print.Doc;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-
+@org.springframework.stereotype.Service
 public class DocumentService {
 
     @Autowired
@@ -47,8 +46,10 @@ public class DocumentService {
     private Double maxFileSize;
     @Value("${application.min-file-size}")
     private Double minFileSize;
+    @Autowired
+    private CaServiceRepository caServiceRepository;
 
-    public Document uploadDocument(Long userId ,MultipartFile file) {
+    public Document uploadDocument(Long userId ,MultipartFile file, Long serviceId) {
 
         Optional<Customer> customer = customerRepository.findByUserId(userId);
 
@@ -90,6 +91,7 @@ public class DocumentService {
                         .docName(fileName)
                         .userId(userId)
                         .docUrl(documentUrl)
+                        .serviceId(serviceId)
                         .build();
 
                 return documentRepository.save(document);
@@ -111,9 +113,10 @@ public class DocumentService {
         }
     }
 
-    public List<Document> getDocument(Long userId, Integer pageNumber, Integer pageSize) {
+    public List<DocumentResponseDto> getDocument(Long userId, Integer pageNumber, Integer pageSize) {
 
         List<Document> documentList = new ArrayList<>();
+        List<DocumentResponseDto> documentResponse = new ArrayList<>();
 
         if (pageNumber == -1 && pageSize == -1){
             logger.info("Pagination not present");
@@ -129,10 +132,33 @@ public class DocumentService {
         if (documentList.isEmpty()){
             logger.info("No document uploaded by customer");
             throw new BadReqException("No Document uploaded by the customer");
-        }else {
-            logger.info("Document List send successfully");
-            return documentList;
         }
+
+        for(Document document: documentList){
+            String serviceName=null;
+            if (!((document.getServiceId() == null) || (document.getServiceId() == -1))){
+                logger.info("Service id is {}",document.getServiceId());
+
+                Optional<Service> service = caServiceRepository.findById(document.getServiceId());
+                Service service1 = service.get();
+                serviceName = service1.getServiceName();
+            }
+
+            DocumentResponseDto documentResponseDto = DocumentResponseDto.builder()
+                    .docId(document.getId())
+                    .docUrl(document.getDocUrl())
+                    .docName(document.getDocName())
+                    .serviceId(document.getServiceId())
+                    .serviceName(serviceName)
+                    .userId(document.getUserId())
+                    .build();
+
+            documentResponse.add(documentResponseDto);
+        }
+
+        logger.info("Document List send successfully");
+        return documentResponse;
+
     }
 
     public List<DocumentResponseDto> searchDocument(String docName, Integer pageNumber, Integer pageSize) {
@@ -152,10 +178,11 @@ public class DocumentService {
 
         for (Document document1: document){
             DocumentResponseDto documentResponse = DocumentResponseDto.builder()
-                    .id(document1.getId())
+                    .docId(document1.getId())
                     .userId(document1.getUserId())
                     .docName(document1.getDocName())
                     .docUrl(document1.getDocUrl())
+                    .serviceId(document1.getServiceId())
                     .build();
 
             documentResponseList.add(documentResponse);

@@ -91,11 +91,14 @@ public class CustomerService {
         }
     }
 
-    public Customer deleteCustomer(Long customerId){
-        Optional<Customer> customer = customerRepository.findById(customerId);
+    public Customer deleteCustomer(Long customerUserId){
+        Optional<Customer> customer = customerRepository.findByUserId(customerUserId);
         if(customer.isPresent())
         {
             Customer customerupdated= customer.get();
+            User user = userRepository.findById(customerUserId).get();
+            user.setStatus(false);
+            userRepository.save(user);
             customerupdated.setCustomerStatus(false);
             return customerRepository.save(customerupdated);
         }else {
@@ -108,10 +111,11 @@ public class CustomerService {
         logger.info("Getting customer by CA id {}",caUserId);
         List<Customer> customers = new ArrayList<>();
 
+// TODO search by name and sorting
 //        if(name != null){
 //            List<CustomerResponseDto> customerResponseDtos = customerRepository.findByCAIdAndName(caUserId,name);
 //        }
-        //TODO
+
 
         if (pageNumber == -1 && pageSize == -1){
             customers = customerRepository.findByCAId(caUserId);

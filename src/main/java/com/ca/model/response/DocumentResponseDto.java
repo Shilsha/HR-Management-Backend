@@ -9,8 +9,11 @@ import lombok.Setter;
 @Builder
 public class DocumentResponseDto {
 
-    private Long id;
+    private Long docId;
     private String docName;
     private Long userId;
     private String docUrl;
+    private Long serviceId;
+    private String serviceName;
+
 }

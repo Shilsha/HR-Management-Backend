@@ -143,6 +143,7 @@ public class UserService {
                 Customer customer = Customer.builder()
                         .userId(user.getId())
                         .caId(userRequest.getCaId())
+                        .customerStatus(true)
                         .build();
 
                 Customer customerResponse = customerRepository.save(customer);

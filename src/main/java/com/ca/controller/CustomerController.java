@@ -66,10 +66,10 @@ public class CustomerController {
         customerService.updateCustomer(customer);
     }
 
-    @DeleteMapping("/delete_customer")
-    public ResponseEntity deleteCustomer(@PathVariable Long customerId) throws JsonProcessingException {
+    @DeleteMapping("/delete_customer_by_userId")
+    public ResponseEntity deleteCustomer(@PathVariable Long userId) throws JsonProcessingException {
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,customerService.deleteCustomer(customerId), ApiMessage.Api_Message);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,customerService.deleteCustomer(userId), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
  }
