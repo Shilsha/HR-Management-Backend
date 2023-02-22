@@ -82,15 +82,15 @@ public class AdminService {
         return admin;
     }
 
-    public void updateAdmin(Admin admin, Long adminId) {
-        Optional<Admin> admin1 = adminRepository.findById(adminId);
+    public void updateAdmin(Admin admin) {
+        Optional<Admin> admin1 = adminRepository.findById(admin.getId());
         if (admin1.isPresent())
         {
             Admin admin2 = admin1.get();
             System.out.println(admin2);
             admin2.setRole(admin.getRole());
             admin2.setUserId(admin.getUserId());
-            logger.info(adminId +" is updated successfully");
+            logger.info(admin.getRole() +" is updated successfully");
         }
 
     }

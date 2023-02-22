@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/subca")
+@RequestMapping("/sub_ca")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SubCAController {
 
@@ -26,47 +26,48 @@ public class SubCAController {
     @Autowired
     private SubCARepository subCARepository;
 
-    @PostMapping
+    @PostMapping("create_subCA")
     public ResponseEntity create(@RequestBody SubCA subCA) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,subCAService.create(subCA), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping
+    @GetMapping("/get_all_subCA")
     public ResponseEntity getAllSubCA(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,subCAService.getAllSubCA(pageNumber, pageSize), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/id")
+    @GetMapping("/get_subCA_by_subCAId")
     public ResponseEntity getSingleSubCA(@RequestParam Long id) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,subCAService.getSingleSubCA(id), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/c")
-    public ResponseEntity getSubCAByCAId(@RequestParam Long caId) throws JsonProcessingException {
+    @GetMapping("/get_subCA_by_CAId")
+    public ResponseEntity getSubCAByCAId(@RequestParam Long caId,
+                                         @RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,subCAService.getSubCAByCAId(caId), ApiMessage.Api_Message);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,subCAService.getSubCAByCAId(caId,pageNumber, pageSize), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/service")
+    @GetMapping("/get_by_subCaId")
     public ResponseEntity getServices(@RequestParam Long subCaId) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,subCAService.getServices(subCaId), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update_subCA")
     public void updateSubCA(@RequestBody SubCA subCA ,@PathVariable Long id){
         subCAService.updateSubCA(subCA,id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete_by_subCaId")
     public void deleteSubCA(@PathVariable Long id){
         subCAService.deleteSubCA(id);
     }

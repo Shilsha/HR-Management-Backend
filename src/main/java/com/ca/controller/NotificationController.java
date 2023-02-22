@@ -18,22 +18,22 @@ public class NotificationController {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    @GetMapping
+    @GetMapping("/get_notification_by_userId")
     public List<Notification> getNotificationByUserId(@RequestParam Long userId){
         return notificationService.getNotification(userId);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/get_all_notification")
     public List<Notification> getAllNotification(@RequestParam Integer pageNumber, @RequestParam Integer pageSize){
         return notificationService.getAllNotification(pageNumber,pageSize);
     }
 
-    @PostMapping
+    @PostMapping("/add_notification")
     public Notification addNotification(@RequestBody Notification notification){
         return notificationService.addNotification(notification);
     }
 
-    @PutMapping
+    @PutMapping("/update_notification")
     public void updateReadStatus(@RequestParam Long id, @RequestParam Boolean status){
         notificationService.updateReadStatus(id,status);
     }

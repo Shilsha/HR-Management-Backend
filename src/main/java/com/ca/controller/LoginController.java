@@ -33,7 +33,7 @@ public class LoginController {
 
     }
 
-    @PutMapping(value = "/verify")
+    @PutMapping(value = "/verify_otp")
     public ResponseEntity verification(@RequestBody OtpVerifyRequest otpVerifyRequest) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,service.verifyEmail(otpVerifyRequest), ApiMessage.Api_Message);

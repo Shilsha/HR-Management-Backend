@@ -6,8 +6,7 @@ com\ca\entity\Document$DocumentBuilder.class
 com\ca\config\JwtRequestFilter.class
 com\ca\config\AwsS3ClientConfig.class
 com\ca\entity\CA.class
-com\ca\service\CaSubCaServiceService.class
-com\ca\entity\CaSubCaService$CaSubCaServiceBuilder.class
+com\ca\controller\CaServiceController.class
 com\ca\model\request\LoginRequest.class
 com\ca\repository\AdminRepository.class
 com\ca\service\CustomerService.class
@@ -24,7 +23,6 @@ com\ca\model\response\SearchResponse.class
 com\ca\exception\ExceptionResponse.class
 com\ca\entity\SubCA.class
 com\ca\model\response\LoginResponse$LoginResponseBuilder.class
-com\ca\repository\CaSubCaServiceRepository.class
 com\ca\utils\Role.class
 com\ca\model\response\SubCAServiceResponseDto$SubCAServiceResponseDtoBuilder.class
 com\ca\entity\Notification.class
@@ -32,6 +30,7 @@ com\ca\model\response\LoginResponse.class
 com\ca\model\response\UserResponseDto.class
 com\ca\controller\CAController.class
 com\ca\model\response\SearchResponse$SearchResponseBuilder.class
+com\ca\service\CaServicesService.class
 com\ca\model\response\SubCAResponseDto$SubCAResponseDtoBuilder.class
 com\ca\model\response\CaServiceResponseDto$CaServiceResponseDtoBuilder.class
 com\ca\model\response\CaServiceResponseDto.class
@@ -44,6 +43,7 @@ com\ca\entity\Notification$NotificationBuilder.class
 com\ca\service\CAService.class
 com\ca\entity\Admin$AdminBuilder.class
 com\ca\repository\SubCARepository.class
+com\ca\entity\Service.class
 com\ca\model\response\UserResponseDto$UserResponseDtoBuilder.class
 com\ca\service\UserService.class
 com\ca\repository\NotificationRepository.class
@@ -51,15 +51,16 @@ com\ca\repository\DocumentRepository.class
 com\ca\controller\AdminController.class
 com\ca\config\SwaggerConfig.class
 com\ca\model\AdminDto.class
-com\ca\entity\CaSubCaService.class
 com\ca\entity\Admin.class
 com\ca\model\response\SubCAServiceResponseDto.class
+com\ca\repository\CaServiceRepository.class
 com\ca\controller\NotificationController.class
 com\ca\exception\GlobalException.class
 com\ca\config\JwtUserDetailsService.class
 com\ca\utils\ApiResponseSkeleton.class
 com\ca\controller\CustomerController.class
 com\ca\model\request\OtpVerifyRequest.class
+com\ca\entity\Service$ServiceBuilder.class
 com\ca\service\DocumentService.class
 com\ca\service\EmailService.class
 com\ca\model\request\OtpVerifyRequest$OtpVerifyRequestBuilder.class
@@ -76,7 +77,6 @@ com\ca\model\SubCADto.class
 com\ca\controller\UserController.class
 com\ca\model\response\CustomerResponseDto$CustomerResponseDtoBuilder.class
 com\ca\model\response\SubCAResponseDto.class
-com\ca\controller\CaSubCaServiceController.class
 com\ca\service\AdminService.class
 com\ca\service\NotificationService.class
 com\ca\service\OtpService.class

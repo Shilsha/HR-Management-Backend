@@ -13,6 +13,8 @@ public class CustomerResponseDto {
 
     private Long id;
     private Long userId;
+    private Long caId;
+    private String caName;
     private String firstName;
     private String lastName;
     private String email;

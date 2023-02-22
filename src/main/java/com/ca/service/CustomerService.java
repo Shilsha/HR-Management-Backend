@@ -1,6 +1,7 @@
 package com.ca.service;
 
 import com.amazonaws.services.apigateway.model.Op;
+import com.ca.Apimessage.ApiMessage;
 import com.ca.entity.Customer;
 import com.ca.entity.User;
 import com.ca.exception.BadReqException;
@@ -81,23 +82,36 @@ public class CustomerService {
         return customerRepository.findById(customerId).get();
     }
 
-    public void updateCustomer(Customer customer, Long customerId){
-        Optional<Customer> customer1 = customerRepository.findById(customerId);
+    public void updateCustomer(Customer customer){
+        Optional<Customer> customer1 = customerRepository.findById(customer.getId());
         if (customer1.isPresent()){
-            logger.info("Updating the customer id :"+customerId);
+            logger.info("Updating the customer id :"+customer.getId());
             Customer customer2 = customer1.get();
             customer2.setUserId(customer.getUserId());
         }
     }
 
-    public void deleteCustomer(Long customerId){
-        logger.info("Deleting the customer id:"+customerId);
-        customerRepository.deleteById(customerId);
+    public Customer deleteCustomer(Long customerId){
+        Optional<Customer> customer = customerRepository.findById(customerId);
+        if(customer.isPresent())
+        {
+            Customer customerupdated= customer.get();
+            customerupdated.setCustomerStatus(false);
+            return customerRepository.save(customerupdated);
+        }else {
+            throw new BadReqException(ApiMessage.Customer_not_Deleted);
+        }
+
     }
 
-    public List<CustomerResponseDto> getCustomerByCAId(Long caUserId, Integer pageNumber, Integer pageSize) {
+    public List<CustomerResponseDto> getCustomerByCAId(Long caUserId, Integer pageNumber, Integer pageSize, String name) {
         logger.info("Getting customer by CA id {}",caUserId);
         List<Customer> customers = new ArrayList<>();
+
+//        if(name != null){
+//            List<CustomerResponseDto> customerResponseDtos = customerRepository.findByCAIdAndName(caUserId,name);
+//        }
+        //TODO
 
         if (pageNumber == -1 && pageSize == -1){
             customers = customerRepository.findByCAId(caUserId);
@@ -110,10 +124,15 @@ public class CustomerService {
         List<CustomerResponseDto> customerResponse = new ArrayList<>();
 
         for (Customer c: customers) {
-            User user = userRepository.findById(c.getUserId()).get();
+            User user;
+            user = userRepository.findById(c.getUserId()).get();
+            User user1= userRepository.findById(caUserId).get();
+
             CustomerResponseDto customer = CustomerResponseDto.builder()
                     .id(c.getId())
                     .userId(user.getId())
+                    .caId(caUserId)
+                    .caName(user1.getFirstName())
                     .firstName(user.getFirstName())
                     .lastName(user.getLastName())
                     .email(user.getEmail())

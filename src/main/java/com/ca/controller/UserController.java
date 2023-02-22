@@ -28,7 +28,7 @@ public class UserController {
     private UserRepository userRepository;
 
     //create
-    @PostMapping
+    @PostMapping("/add_user")
     public ResponseEntity createUser(@RequestBody UserRequestDto userRequest) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, userService.saveUser(userRequest), ApiMessage.Api_Message);
@@ -36,40 +36,42 @@ public class UserController {
     }
 
     //single user get
-    @GetMapping("/get_user")
+    @GetMapping("/get_user_by_userId")
     public ResponseEntity getSingleUser(@RequestParam String userId) throws JsonProcessingException {
-        logger.info("Get Single User Handler: UserController");
+
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.getUser(Long.parseLong(userId)), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
     //all user get
-    @GetMapping
+    @GetMapping("/get_all_user")
     public ResponseEntity getAllUser(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.getAllUser(pageNumber, pageSize), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @PutMapping
+    @PutMapping("/update_user")
     public ResponseEntity updateUser(@RequestBody UserRequestDto userRequest,@RequestParam Long id) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.updateUser(userRequest, id), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @PutMapping("/profile")
+    @PutMapping("/upload_profile_by_userId")
     public ResponseEntity addProfile(@RequestParam Long userId, @RequestParam MultipartFile image) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.uploadImage(userId, image), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @DeleteMapping
-    public void deleteUser(@RequestParam Long userId){
-        userService.deleteUser(userId);
+    @DeleteMapping("/delete_user_by_userId")
+    public ResponseEntity deleteUser(@RequestParam Long userId) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.deleteUser(userId), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search_user_by_name")
     public ResponseEntity searchUser(@RequestParam String name, @RequestParam Role role,@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.searchUser(name,role, pageNumber, pageSize), ApiMessage.Api_Message);

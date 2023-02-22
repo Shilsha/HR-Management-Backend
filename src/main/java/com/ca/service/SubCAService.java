@@ -1,13 +1,12 @@
 package com.ca.service;
 
-import com.ca.entity.CaSubCaService;
-import com.ca.entity.Notification;
+import com.ca.entity.Service;
 import com.ca.entity.SubCA;
 import com.ca.entity.User;
 import com.ca.model.response.SubCAResponseDto;
 import com.ca.model.response.SubCAServiceResponseDto;
 import com.ca.model.response.UserResponseDto;
-import com.ca.repository.CaSubCaServiceRepository;
+import com.ca.repository.CaServiceRepository;
 import com.ca.repository.NotificationRepository;
 import com.ca.repository.SubCARepository;
 import com.ca.repository.UserRepository;
@@ -17,14 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@org.springframework.stereotype.Service
 public class SubCAService {
 
     @Autowired
@@ -33,7 +30,7 @@ public class SubCAService {
     private UserRepository userRepository;
     private Logger logger = LoggerFactory.getLogger(SubCAService.class);
     @Autowired
-    private CaSubCaServiceRepository caSubCaServiceRepository;
+    private CaServiceRepository caSubCaServiceRepository;
     @Autowired
     private NotificationRepository notificationRepository;
 
@@ -104,9 +101,17 @@ public class SubCAService {
         subCARepository.deleteById(id);
     }
 
-    public List<SubCAResponseDto> getSubCAByCAId(Long caId) {
+    public List<SubCAResponseDto> getSubCAByCAId(Long caId, Integer pageNumber, Integer pageSize) {
         logger.info("Getting all sub CA have CAId :{}",caId);
-        List<SubCA> subCA = subCARepository.findByCAId(caId);
+        List<SubCA> subCA = new ArrayList<>();
+
+        if (pageNumber == -1 && pageSize == -1){
+            subCA = subCARepository.findByCAId(caId);
+        }else {
+            Pageable pageable = PageRequest.of(pageNumber,pageSize);
+            Page<SubCA> subCAPage = subCARepository.findByCAid(caId,pageable);
+            subCA = subCAPage.getContent();
+        }
 
         List<SubCAResponseDto> subCAResponse = new ArrayList<>();
 
@@ -135,9 +140,9 @@ public class SubCAService {
         List<SubCAServiceResponseDto> subCAService = new ArrayList<>();
 
         SubCA subCA = subCARepository.findById(subCaId).get();
-        List<CaSubCaService> service = caSubCaServiceRepository.findByUserId(subCA.getUserId());
+        List<Service> service = caSubCaServiceRepository.findByUserId(subCA.getUserId());
 
-        for(CaSubCaService service1: service){
+        for(Service service1: service){
 
             SubCAServiceResponseDto subCAServiceResponse = SubCAServiceResponseDto.builder()
                     .serviceId(service1.getId())

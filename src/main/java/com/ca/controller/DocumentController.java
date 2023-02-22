@@ -20,7 +20,7 @@ public class DocumentController {
     @Autowired
     private DocumentService documentService;
 
-    @PostMapping("/upload")
+    @PostMapping("/upload_document")
     public ResponseEntity uploadDocument(@RequestParam Long userId,
                                          @RequestParam("file") MultipartFile file) throws JsonProcessingException {
 
@@ -29,14 +29,14 @@ public class DocumentController {
 
     }
 
-    @GetMapping
+    @GetMapping("/get_document_by_userId")
     public ResponseEntity getDocument(@RequestParam Long userId,@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,documentService.getDocument(userId, pageNumber, pageSize), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search_document")
     public ResponseEntity searchDocument(@RequestParam String docName, @RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,documentService.searchDocument(docName,pageNumber,pageSize), ApiMessage.Api_Message);

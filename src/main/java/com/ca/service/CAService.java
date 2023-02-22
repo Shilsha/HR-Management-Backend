@@ -1,15 +1,14 @@
 package com.ca.service;
 
 import com.ca.controller.CAController;
-import com.ca.controller.UserController;
 import com.ca.entity.CA;
-import com.ca.entity.CaSubCaService;
+import com.ca.entity.Service;
 import com.ca.entity.User;
 import com.ca.exception.BadReqException;
 import com.ca.model.response.CaServiceResponseDto;
 import com.ca.model.response.UserResponseDto;
 import com.ca.repository.CARepository;
-import com.ca.repository.CaSubCaServiceRepository;
+import com.ca.repository.CaServiceRepository;
 import com.ca.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,20 +16,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@org.springframework.stereotype.Service
 public class CAService {
 
     @Autowired
     private CARepository caRepository;
     private Logger logger = LoggerFactory.getLogger(CAController.class);
     @Autowired
-    private CaSubCaServiceRepository caSubCaServiceRepository;
+    private CaServiceRepository caSubCaServiceRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -87,13 +85,16 @@ public class CAService {
         return caRepository.findById(caId).get();
     }
 
-    public void updateCA(CA ca, Long caId){
-        Optional<CA> ca1 = caRepository.findById(caId);
+    public CA updateCA(CA ca){
+        Optional<CA> ca1 = caRepository.findById(ca.getId());
         if (ca1.isPresent()){
             logger.info("Updating the CA id:"+ca.getId());
             CA ca2 = ca1.get();
             ca2.setUserId(ca.getUserId());
             ca2.setAdminId(ca.getAdminId());
+            return ca2;
+        }else {
+            throw new BadReqException("CA not present in DB "+ca.getId());
         }
     }
 
@@ -111,8 +112,8 @@ public class CAService {
             CA ca1 = ca.get();
             Long userId = ca1.getUserId();
 
-            List<CaSubCaService> services = caSubCaServiceRepository.findByUserId(userId);
-            for (CaSubCaService service: services) {
+            List<Service> services = caSubCaServiceRepository.findByUserId(userId);
+            for (Service service: services) {
                 CaServiceResponseDto caServiceResponse = CaServiceResponseDto.builder()
                         .serviceId(service.getId())
                         .serviceName(service.getServiceName())

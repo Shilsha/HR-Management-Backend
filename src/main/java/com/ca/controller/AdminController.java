@@ -20,33 +20,33 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-    @PostMapping
+    @PostMapping("/create_admin")
     public ResponseEntity create(@RequestBody Admin admin) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,adminService.create(admin), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping
+    @GetMapping("/get_all_admin")
     public ResponseEntity getAllAdmin(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,adminService.getAllAdmin(pageNumber, pageSize), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/{adminId}")
-    public Admin getAdmin(@PathVariable Long adminId){
+    @GetMapping("/get_admin_by_adminId")
+    public Admin getAdmin(@RequestParam Long adminId){
         return adminService.getSingleAdmin(adminId);
     }
 
-    @PutMapping("/{adminId}")
-    public void updateAdmin(@RequestBody Admin admin,@PathVariable Long adminId){
+    @PutMapping("/update_admin")
+    public void updateAdmin(@RequestBody Admin admin){
 
-        adminService.updateAdmin(admin,adminId);
+        adminService.updateAdmin(admin);
     }
 
-    @DeleteMapping("/{adminId}")
-    public void delete(@PathVariable Long adminId){
+    @DeleteMapping("/delete_by_adminId")
+    public void delete(@RequestParam Long adminId){
         adminService.deleteAdmin(adminId);
     }
 }

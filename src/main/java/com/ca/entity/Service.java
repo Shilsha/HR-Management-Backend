@@ -15,7 +15,7 @@ import java.util.Date;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-public class CaSubCaService {
+public class Service {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

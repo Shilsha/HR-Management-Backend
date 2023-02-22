@@ -1,13 +1,18 @@
 package com.ca.service;
 
 import com.ca.config.JwtTokenUtil;
+import com.ca.entity.Customer;
+import com.ca.entity.SubCA;
 import com.ca.entity.User;
 import com.ca.exception.BadReqException;
 import com.ca.model.request.LoginRequest;
 import com.ca.model.request.OtpVerifyRequest;
 import com.ca.model.response.LoginResponse;
 import com.ca.model.response.UserResponseDto;
+import com.ca.repository.CustomerRepository;
+import com.ca.repository.SubCARepository;
 import com.ca.repository.UserRepository;
+import com.ca.utils.Role;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +42,8 @@ public class LoginService {
     private final JwtTokenUtil jwtTokenUtil;
 
     private Logger logger = LoggerFactory.getLogger(UserService.class);
+    private final CustomerRepository customerRepository;
+    private final SubCARepository subCARepository;
 
 //    <-------------------------------------- Login for User --------------------------------------------->
 
@@ -84,9 +91,20 @@ public class LoginService {
 
                 String token = jwtTokenUtil.generateToken(userDetails);
 
+                Long caUserId = null;
+                if (user.getRole().equals(Role.CUSTOMER)){
+                    Customer customer = customerRepository.findUserId(user.getId());
+                    caUserId = customer.getCaId();
+                }
+                if (user.getRole().equals(Role.SUBCA)){
+                    SubCA subCA = subCARepository.findByUserId(user.getId());
+                    caUserId = subCA.getCaId();
+                }
+
                 LoginResponse loginResponse = LoginResponse.builder()
                         .token(token)
                         .id(user.getId())
+                        .caUserId(caUserId)
                         .firstName(user.getFirstName())
                         .lastName(user.getLastName())
                         .email(user.getEmail())

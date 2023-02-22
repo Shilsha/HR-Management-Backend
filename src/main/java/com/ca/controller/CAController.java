@@ -22,40 +22,41 @@ public class CAController {
     @Autowired
     private CAService caService;
 
-    @PostMapping
+    @PostMapping("/create_CA")
     public ResponseEntity createCA(@RequestBody CA ca) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caService.createCA(ca), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping
+    @GetMapping("/get_all_CA")
     public ResponseEntity getAllCA(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caService.getAllCA(pageNumber, pageSize), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/id")
-    public ResponseEntity getCAById(@RequestParam Long id) throws JsonProcessingException {
+    @GetMapping("/get_CA_By_userId")
+    public ResponseEntity getCAById(@RequestParam("userId") Long id) throws JsonProcessingException {
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caService.getCAById(id), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/service")
+    @GetMapping("/get_services_By_caId")
     public ResponseEntity getService(@RequestParam Long caId) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caService.getService(caId), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @PutMapping("/{caID}")
-    public void updateCA(@RequestBody CA ca, @PathVariable Long caId){
-        caService.updateCA(ca,caId);
+    @PutMapping("/update_CA")
+    public void updateCA(@RequestBody CA ca){
+
+        caService.updateCA(ca);
     }
 
-    @DeleteMapping("/{caID}")
-    public void deleteCA(@PathVariable Long caId){
+    @DeleteMapping("/delete_CA")
+    public void deleteCA(@RequestParam Long caId){
         caService.deleteCA(caId);
     }
 }

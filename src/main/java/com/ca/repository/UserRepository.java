@@ -21,10 +21,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query(value = "select * from user u where email =?1",nativeQuery = true)
     User findByEmail(String email);
 
-    @Query(value = "select * from user u where role=?1 and first_name like CONCAT(?2,'%')", nativeQuery = true)
+    @Query(value = "select * from user u where role=?1 and first_name like CONCAT(?2,'%') and status=true", nativeQuery = true)
     Page<User> findNameStartWith(int role, String name, Pageable pageable);
 
-    @Query(value = "select * from user u where role=?1 and first_name like CONCAT(?2,'%')", nativeQuery = true)
+    @Query(value = "select * from user u where role=?1 and first_name like CONCAT(?2,'%') and status=true", nativeQuery = true)
     List<User> findNameStartwith(int role, String name);
 
     @Query(value = "select * from user u where role=?1", nativeQuery = true)
@@ -33,6 +33,12 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query(value = "select * from user u where role=?1", nativeQuery = true)
     Page<User> findByrole(int role,Pageable pageable);
 
-    @Query(value = "select * from user u where id=?1 and role=?2", nativeQuery = true)
+    @Query(value = "select * from user u where id=?1 and role=?2 and status = 'true'", nativeQuery = true)
     Optional<User> findByUserId(Long userId, int role);
+
+    @Query(value = "select * from user u where id=?1 and status=true", nativeQuery = true)
+    User findByid(Long userId);
+
+    @Query(value = "select * from user u where status=true",nativeQuery = true)
+    Page<User> findAll(Pageable pageable);
 }

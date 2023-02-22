@@ -25,14 +25,14 @@ public class CustomerController {
     @Autowired
     private CustomerRepository customerRepository;
 
-    @PostMapping
+    @PostMapping("/create_customer")
     public ResponseEntity create(@RequestBody Customer customer) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, customerService.createCustomer(customer), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping
+    @GetMapping("/get_all_customer")
     public ResponseEntity getAllCustomer(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, customerService.getAllCustomer(pageNumber, pageSize), ApiMessage.Api_Message);
@@ -47,27 +47,29 @@ public class CustomerController {
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/userId")
-    public ResponseEntity getCustomerByUserId(@RequestParam Long id) throws JsonProcessingException {
+    @GetMapping("/get_customer_by_userId")
+    public ResponseEntity getCustomerByUserId(@RequestParam("userId") Long id) throws JsonProcessingException {
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, customerService.getCustomerByUserId(id), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/caId")
-    public ResponseEntity getCustomerOfCA(@RequestParam Long id, @RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
+    @GetMapping("/get_customer_by_caId")
+    public ResponseEntity getCustomerOfCA(@RequestParam Long id, @RequestParam Integer pageNumber,
+                                          @RequestParam Integer pageSize, @RequestParam(required = false) String name) throws JsonProcessingException {
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, customerService.getCustomerByCAId(id, pageNumber, pageSize), ApiMessage.Api_Message);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, customerService.getCustomerByCAId(id, pageNumber, pageSize, name), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
-    @PutMapping("/{customerId}")
-    public void UpdateCustomer(@RequestBody Customer customer, @PathVariable Long customerId){
-
-        customerService.updateCustomer(customer, customerId);
+    @PutMapping("/update_customer")
+    public void UpdateCustomer(@RequestBody Customer customer){
+        customerService.updateCustomer(customer);
     }
 
-    @DeleteMapping("/{customerId}")
-    public void deleteCustomer(@PathVariable Long customerId){
-        customerService.deleteCustomer(customerId);
+    @DeleteMapping("/delete_customer")
+    public ResponseEntity deleteCustomer(@PathVariable Long customerId) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,customerService.deleteCustomer(customerId), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
     }
-}
+ }

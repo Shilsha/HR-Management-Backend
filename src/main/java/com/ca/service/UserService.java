@@ -165,14 +165,21 @@ public class UserService {
         return userResponse;
     }
 
+//    <---------------------------------- Get User By Id ------------------------------------->
+
     public User getUser(Long userId) {
         logger.info("Getting the user id : {}", userId);
-        User user = userRepository.findById(userId).get();
+        Optional<User> user = Optional.ofNullable(userRepository.findByid(userId));
+        if (!user.isPresent()){
+            throw new BadReqException("User not present");
+        }
 
-        byte[] decodedBytes = Base64.getDecoder().decode(user.getPassword());
+        User user1 = user.get();
+
+        byte[] decodedBytes = Base64.getDecoder().decode(user1.getPassword());
         String decodedPassword = new String(decodedBytes);
-        user.setPassword(decodedPassword);
-        return user;
+        user1.setPassword(decodedPassword);
+        return user1;
     }
 
 //    <--------------------------------- Get all User --------------------------------------------->
@@ -343,7 +350,7 @@ public class UserService {
         return userResponse;
     }
 
-    //    <------------------------------------Search User---------------------------------------------->
+    //    <------------------------------------Search User By Name---------------------------------------------->
 
     public List<SearchResponse> searchUser(String name, Role role, Integer pageNumber, Integer pageSize) {
         int userRole = role.ordinal();
@@ -395,8 +402,20 @@ public class UserService {
         return searchResponse;
     }
 
-    public void deleteUser(Long userId) {
-        userRepository.deleteById(userId);
+//    <---------------------------------- Delete User ------------------------------------------->
+
+    public User deleteUser(Long userId) {
+
+        Optional<User> user = userRepository.findById(userId);
+
+        if(!user.isPresent()){
+            throw new BadReqException("User Not present in DB : "+userId);
+        }
+
+        User user1 = user.get();
+        user1.setStatus(false);
         logger.info(userId+" deleted successfully");
+        return userRepository.save(user1);
+
     }
 }

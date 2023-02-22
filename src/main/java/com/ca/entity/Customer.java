@@ -23,6 +23,8 @@ public class Customer {
     private Long id;
     private Long userId;
     private Long caId;
+
+    private Boolean customerStatus;
     @CreatedDate
     private Date createdDate;
     @LastModifiedDate
