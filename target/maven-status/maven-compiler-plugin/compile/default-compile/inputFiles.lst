@@ -33,6 +33,7 @@ D:\CA\CA-Java\src\main\java\com\ca\service\EmailService.java
 D:\CA\CA-Java\src\main\java\com\ca\exception\ExceptionResponse.java
 D:\CA\CA-Java\src\main\java\com\ca\config\JwtRequestFilter.java
 D:\CA\CA-Java\src\main\java\com\ca\entity\CA.java
+D:\CA\CA-Java\src\main\java\com\ca\utils\UserResponse.java
 D:\CA\CA-Java\src\main\java\com\ca\controller\NotificationController.java
 D:\CA\CA-Java\src\main\java\com\ca\entity\Document.java
 D:\CA\CA-Java\src\main\java\com\ca\model\response\UserResponseDto.java

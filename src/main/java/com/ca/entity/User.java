@@ -1,6 +1,7 @@
 package com.ca.entity;
 
 import com.ca.utils.Role;
+import com.ca.utils.UserResponse;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -48,5 +49,6 @@ public class User {
     private String profileName;
     private String gender;
     private String panCardNumber;
+    private UserResponse userResponse;
 
 }

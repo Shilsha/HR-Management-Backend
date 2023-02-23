@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -22,7 +24,7 @@ public class DocumentController {
 
     @PostMapping("/upload_document")
     public ResponseEntity uploadDocument(@RequestParam Long userId,
-                                         @RequestParam("file") MultipartFile file, @RequestParam Long serviceId) throws JsonProcessingException {
+                                         @RequestParam("file") MultipartFile file, @RequestParam Long serviceId) throws JsonProcessingException, MessagingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,documentService.uploadDocument(userId,file, serviceId), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);

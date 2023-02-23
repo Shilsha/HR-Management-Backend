@@ -43,6 +43,7 @@ com\ca\entity\Notification$NotificationBuilder.class
 com\ca\service\CAService.class
 com\ca\entity\Admin$AdminBuilder.class
 com\ca\repository\SubCARepository.class
+com\ca\utils\UserResponse.class
 com\ca\entity\Service.class
 com\ca\model\response\UserResponseDto$UserResponseDtoBuilder.class
 com\ca\service\UserService.class

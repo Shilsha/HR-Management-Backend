@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
+
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -29,7 +31,7 @@ public class UserController {
 
     //create
     @PostMapping("/add_user")
-    public ResponseEntity createUser(@RequestBody UserRequestDto userRequest) throws JsonProcessingException {
+    public ResponseEntity createUser(@RequestBody UserRequestDto userRequest) throws JsonProcessingException, MessagingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, userService.saveUser(userRequest), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);

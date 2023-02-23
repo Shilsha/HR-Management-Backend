@@ -9,11 +9,13 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ca.entity.Customer;
 import com.ca.entity.Document;
 import com.ca.entity.Service;
+import com.ca.entity.User;
 import com.ca.exception.BadReqException;
 import com.ca.model.response.DocumentResponseDto;
 import com.ca.repository.CaServiceRepository;
 import com.ca.repository.CustomerRepository;
 import com.ca.repository.DocumentRepository;
+import com.ca.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FilenameUtils;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +51,12 @@ public class DocumentService {
     private Double minFileSize;
     @Autowired
     private CaServiceRepository caServiceRepository;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private UserRepository userRepository;
 
-    public Document uploadDocument(Long userId ,MultipartFile file, Long serviceId) {
+    public Document uploadDocument(Long userId ,MultipartFile file, Long serviceId) throws MessagingException {
 
         Optional<Customer> customer = customerRepository.findByUserId(userId);
 
@@ -94,7 +101,7 @@ public class DocumentService {
                         .serviceId(serviceId)
                         .build();
 
-                return documentRepository.save(document);
+                documentRepository.save(document);
 
             } catch (IOException ioe) {
                 logger.error("IOException: " + ioe.getMessage());
@@ -106,7 +113,13 @@ public class DocumentService {
                 throw clientException;
             }
 
+            User user = userRepository.findByid(userId);
+
+            Customer customer1 = customer.get();
+            User caDetails = userRepository.findByid(customer1.getCaId());
             logger.info("Document uploaded successfully");
+            emailService.sendDocumentEmail(document, user.getFirstName(), caDetails.getEmail());
+            logger.info("Document Mail send successfully on CA email : {}",caDetails.getEmail());
             return document;
         }else {
             throw new BadReqException("Only (.jpg, .pdf, .word, .docx, .svg, .png, .xlsx) type of file are allowed!!");
@@ -151,6 +164,8 @@ public class DocumentService {
                     .serviceId(document.getServiceId())
                     .serviceName(serviceName)
                     .userId(document.getUserId())
+                    .createdDate(document.getCreatedDate())
+                    .modifiedDate(document.getModifiedDate())
                     .build();
 
             documentResponse.add(documentResponseDto);
@@ -183,6 +198,8 @@ public class DocumentService {
                     .docName(document1.getDocName())
                     .docUrl(document1.getDocUrl())
                     .serviceId(document1.getServiceId())
+                    .createdDate(document1.getCreatedDate())
+                    .modifiedDate(document1.getModifiedDate())
                     .build();
 
             documentResponseList.add(documentResponse);

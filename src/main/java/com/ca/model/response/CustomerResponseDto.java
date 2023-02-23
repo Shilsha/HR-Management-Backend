@@ -1,5 +1,6 @@
 package com.ca.model.response;
 
+import com.ca.utils.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,4 +24,5 @@ public class CustomerResponseDto {
     private String phone;
     private String panCardNumber;
     private String gender;
+    private UserResponse userResponse;
 }

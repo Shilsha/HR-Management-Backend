@@ -13,6 +13,7 @@ import com.ca.repository.CustomerRepository;
 import com.ca.repository.SubCARepository;
 import com.ca.repository.UserRepository;
 import com.ca.utils.Role;
+import com.ca.utils.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,7 +147,7 @@ public class LoginService {
             if(otp1.equals(otp)){
                 logger.info("OTP Verified");
                 user.setOtpVerify(true);
-                user.setStatus(true);
+                user.setUserResponse(UserResponse.ACCEPTED);
                 userRepository.save(user);
             }else {
                 logger.info("Invalid OTP");
@@ -168,6 +169,7 @@ public class LoginService {
                 .otp(user.getOtp())
                 .otpVerify(user.isOtpVerify())
                 .status(user.isStatus())
+                .userResponse(user.getUserResponse())
                 .createdDate(user.getCreatedDate())
                 .modifiedDate(user.getModifiedDate())
                 .profileUrl(user.getProfileUrl())

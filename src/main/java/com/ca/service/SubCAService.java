@@ -126,6 +126,7 @@ public class SubCAService {
                     .address(user.getAddress())
                     .mobile(user.getMobile())
                     .phone(user.getPhone())
+                    .userResponse(user.getUserResponse())
                     .build();
 
             subCAResponse.add(s);

@@ -1,6 +1,7 @@
 package com.ca.model.response;
 
 import com.ca.utils.Role;
+import com.ca.utils.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class SubCAResponseDto {
     private String address;
     private String mobile;
     private String phone;
+    private UserResponse userResponse;
 
 
 }

@@ -145,6 +145,7 @@ public class CustomerService {
                     .phone(user.getPhone())
                     .panCardNumber(user.getPanCardNumber())
                     .gender(user.getGender())
+                    .userResponse(user.getUserResponse())
                     .build();
 
             customerResponse.add(customer);

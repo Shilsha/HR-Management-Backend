@@ -13,6 +13,7 @@ import com.ca.model.response.SearchResponse;
 import com.ca.model.response.UserResponseDto;
 import com.ca.repository.*;
 import com.ca.utils.Role;
+import com.ca.utils.UserResponse;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -56,7 +58,7 @@ public class UserService {
 
 //    <----------------------------------- Add User --------------------------------------->
 
-    public UserResponseDto saveUser(UserRequestDto userRequest) {
+    public UserResponseDto saveUser(UserRequestDto userRequest) throws MessagingException {
         logger.info("Creating new user : {} ", userRequest.getEmail() );
 
         Optional<User> user1 = Optional.ofNullable(userRepository.findByEmail(userRequest.getEmail()));
@@ -81,7 +83,8 @@ public class UserService {
                 .phone(userRequest.getPhone())
                 .password(encodedPassword)
                 .role(userRequest.getRole())
-                .status(false)
+                .status(true)
+                .userResponse(UserResponse.REQUESTED)
                 .otp(otpService.generateOtp())
                 .otpVerify(false)
                 .profileUrl(null)
@@ -104,6 +107,7 @@ public class UserService {
                 .otp(user.getOtp())
                 .otpVerify(user.isOtpVerify())
                 .status(user.isStatus())
+                .userResponse(user.getUserResponse())
                 .createdDate(user.getCreatedDate())
                 .modifiedDate(user.getModifiedDate())
                 .profileUrl(user.getProfileUrl())
@@ -162,7 +166,7 @@ public class UserService {
             }
         }
 
-        emailService.sendEmail(userRequest, user.getOtp());
+        emailService.sendOTPEmail(userRequest, user.getOtp());
         return userResponse;
     }
 
@@ -259,6 +263,7 @@ public class UserService {
                     .otp(user.getOtp())
                     .otpVerify(user.isOtpVerify())
                     .status(user.isStatus())
+                    .userResponse(user.getUserResponse())
                     .createdDate(user.getCreatedDate())
                     .modifiedDate(user.getModifiedDate())
                     .profileUrl(user.getProfileUrl())

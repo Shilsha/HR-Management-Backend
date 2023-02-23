@@ -1,6 +1,7 @@
 package com.ca.model.response;
 
 import com.ca.utils.Role;
+import com.ca.utils.UserResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,5 +28,6 @@ public class UserResponseDto {
     private String profileName;
     private String gender;
     private String panCardNumber;
+    private UserResponse userResponse;
 
 }
