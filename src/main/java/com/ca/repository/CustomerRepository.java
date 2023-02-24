@@ -28,6 +28,13 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query(value = "select * from customer c where ca_id=?1",nativeQuery = true)
     Page<Customer> findByCAid(Long caId, Pageable pageable);
 
+//    @Query(value = "SELECT c.id as customer_id,c.user_id, c.ca_id, u.first_name," +
+//            " u.last_name, u.email, u.address, u.mobile ,u.phone ,u.pan_card_number ," +
+//            "u.gender ,u.user_response\n" +
+//            FROM customer c\n" +
+//            " Inner JOIN user u ON c.user_id  = u.id WHERE ca_id = 459;")
+//    List<CustomerResponseDto> findByCAIdAndName(Long caUserId, String name);
+
 
 //    SELECT c.id, u.first_name, u.email
 //    FROM customer c

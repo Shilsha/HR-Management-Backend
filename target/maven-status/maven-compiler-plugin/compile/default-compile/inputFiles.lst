@@ -12,6 +12,7 @@ D:\CA\CA-Java\src\main\java\com\ca\model\request\LoginRequest.java
 D:\CA\CA-Java\src\main\java\com\ca\entity\User.java
 D:\CA\CA-Java\src\main\java\com\ca\controller\DocumentController.java
 D:\CA\CA-Java\src\main\java\com\ca\entity\SubCA.java
+D:\CA\CA-Java\src\main\java\com\ca\service\RequestService.java
 D:\CA\CA-Java\src\main\java\com\ca\config\AwsS3ClientConfig.java
 D:\CA\CA-Java\src\main\java\com\ca\model\request\UserRequestDto.java
 D:\CA\CA-Java\src\main\java\com\ca\service\DocumentService.java
@@ -45,7 +46,9 @@ D:\CA\CA-Java\src\main\java\com\ca\model\CADto.java
 D:\CA\CA-Java\src\main\java\com\ca\model\response\SearchResponse.java
 D:\CA\CA-Java\src\main\java\com\ca\utils\Role.java
 D:\CA\CA-Java\src\main\java\com\ca\CAHandlerApplication.java
+D:\CA\CA-Java\src\main\java\com\ca\repository\RequestRepository.java
 D:\CA\CA-Java\src\main\java\com\ca\controller\CustomerController.java
+D:\CA\CA-Java\src\main\java\com\ca\entity\Request.java
 D:\CA\CA-Java\src\main\java\com\ca\model\response\DocumentResponseDto.java
 D:\CA\CA-Java\src\main\java\com\ca\repository\CustomerRepository.java
 D:\CA\CA-Java\src\main\java\com\ca\config\JwtTokenUtil.java
@@ -53,6 +56,7 @@ D:\CA\CA-Java\src\main\java\com\ca\config\JwtUserDetailsService.java
 D:\CA\CA-Java\src\main\java\com\ca\repository\CaServiceRepository.java
 D:\CA\CA-Java\src\main\java\com\ca\entity\Notification.java
 D:\CA\CA-Java\src\main\java\com\ca\repository\NotificationRepository.java
+D:\CA\CA-Java\src\main\java\com\ca\controller\RequestController.java
 D:\CA\CA-Java\src\main\java\com\ca\exception\GlobalException.java
 D:\CA\CA-Java\src\main\java\com\ca\repository\SubCARepository.java
 D:\CA\CA-Java\src\main\java\com\ca\service\AdminService.java

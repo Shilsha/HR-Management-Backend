@@ -51,7 +51,6 @@ public class UserService {
     private AmazonS3 amazonS3;
     @Value("${application.bucket.name}")
     private String bucketName;
-
     private Logger logger = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private SubCARepository subCARepository;

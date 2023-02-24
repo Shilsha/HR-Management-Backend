@@ -15,18 +15,18 @@ import java.util.Date;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-public class Service {
+public class Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String serviceName;
-    private String serviceDesc;
-    private String subService;
-    private Long userId;
-    private Boolean serviceStatus;
+    private String text;
+    private Long caId;
+    private Long customerId;
     @CreatedDate
     private Date createdDate;
     @LastModifiedDate
     private Date modifiedDate;
+    private Boolean requestStatus;
+
 }

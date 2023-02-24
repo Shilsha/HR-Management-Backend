@@ -10,6 +10,7 @@ com\ca\controller\CaServiceController.class
 com\ca\model\request\LoginRequest.class
 com\ca\repository\AdminRepository.class
 com\ca\service\CustomerService.class
+com\ca\controller\RequestController.class
 com\ca\model\CADto.class
 com\ca\config\JwtTokenUtil.class
 com\ca\config\SecurityConfig.class
@@ -48,6 +49,7 @@ com\ca\entity\Service.class
 com\ca\model\response\UserResponseDto$UserResponseDtoBuilder.class
 com\ca\service\UserService.class
 com\ca\repository\NotificationRepository.class
+com\ca\repository\RequestRepository.class
 com\ca\repository\DocumentRepository.class
 com\ca\controller\AdminController.class
 com\ca\config\SwaggerConfig.class
@@ -71,6 +73,7 @@ com\ca\model\request\UserRequestDto.class
 com\ca\entity\CA$CABuilder.class
 com\ca\controller\DocumentController.class
 com\ca\controller\LoginController.class
+com\ca\entity\Request.class
 com\ca\utils\ApiResponse.class
 com\ca\entity\Document.class
 com\ca\exception\BadReqException.class
@@ -78,6 +81,8 @@ com\ca\model\SubCADto.class
 com\ca\controller\UserController.class
 com\ca\model\response\CustomerResponseDto$CustomerResponseDtoBuilder.class
 com\ca\model\response\SubCAResponseDto.class
+com\ca\entity\Request$RequestBuilder.class
+com\ca\service\RequestService.class
 com\ca\service\AdminService.class
 com\ca\service\NotificationService.class
 com\ca\service\OtpService.class

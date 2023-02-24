@@ -21,16 +21,16 @@ public class CaServiceController {
     private CaServicesService caServiceService;
 
     @GetMapping("/get_all_services")
-    public ResponseEntity getAllService(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
+    public ResponseEntity getAllService() throws JsonProcessingException {
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.getAllServices(pageNumber, pageSize), ApiMessage.Api_Message);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.getAllServices(), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
     @GetMapping("/get_service_by_userId")
-    public ResponseEntity getService(@RequestParam Long userId, @RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {
+    public ResponseEntity getService(@RequestParam Long userId) throws JsonProcessingException {
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.getService(userId, pageNumber, pageSize), ApiMessage.Api_Message);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.getService(userId), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
@@ -38,6 +38,25 @@ public class CaServiceController {
     public ResponseEntity addService(@RequestBody Service service) throws JsonProcessingException {
 
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.addService(service), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
+    }
+
+    @GetMapping("/get_distinct_service")
+    public ResponseEntity getDistinctService() throws JsonProcessingException {
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.getServiceByName(), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
+    }
+
+    @GetMapping("/get_subService_by_serviceName")
+    public ResponseEntity getSubServiceByServiceName(@RequestParam String serviceName) throws JsonProcessingException {
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.getSubServiceByService(serviceName), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
+    }
+
+    @DeleteMapping("/delete_service")
+    public ResponseEntity deleteService(@RequestParam Long serviceId) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.deleteService(serviceId), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 

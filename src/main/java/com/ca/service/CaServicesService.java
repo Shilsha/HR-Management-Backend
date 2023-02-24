@@ -22,15 +22,13 @@ public class CaServicesService {
     private Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    private CaServiceRepository caSubCaServiceRepository;
+    private CaServiceRepository caServiceRepository;
     @Autowired
     private UserRepository userRepository;
 
-    public List<Service> getAllServices(Integer pageNumber, Integer pageSize) {
+    public List<Service> getAllServices() {
         logger.info("Getting all services");
-        Pageable pageable = PageRequest.of(pageNumber,pageSize);
-        Page<Service> pageService = caSubCaServiceRepository.findAll(pageable);
-        List<Service> services = pageService.getContent();
+        List<Service> services = caServiceRepository.findAll();
         return services;
     }
 
@@ -40,20 +38,36 @@ public class CaServicesService {
         if (!user.isPresent()){
             throw new BadReqException("User Id not present in DB");
         }
-        return caSubCaServiceRepository.save(service);
+        service.setServiceStatus(true);
+        return caServiceRepository.save(service);
     }
 
-    public List<Service> getService(Long userId, Integer pageNumber, Integer pageSize) {
+    public List<Service> getService(Long userId) {
         logger.info("Get service of user id {}",userId);
-        List<Service> services = new ArrayList<>();
 
-        if (pageNumber == -1 && pageSize == -1){
-            services = caSubCaServiceRepository.findByUserId(userId);
-        }else {
-            Pageable pageable = PageRequest.of(pageNumber,pageSize);
-            Page<Service> pageService = caSubCaServiceRepository.findByUserid(userId,pageable);
-            services = pageService.getContent();
-        }
+        List<Service> services = caServiceRepository.findByUserId(userId);
         return services;
+    }
+
+    public List<Service> getServiceByName() {
+
+        logger.info("Get Distinct service");
+        return caServiceRepository.findDistinctService();
+    }
+
+    public List<Service> getSubServiceByService(String serviceName) {
+        logger.info("Get SubService by Service name : {}",serviceName);
+        return caServiceRepository.findSubServiceByServiceName(serviceName);
+    }
+
+    public Service deleteService(Long serviceId) {
+        logger.info("Delete service by service_id : {}",serviceId);
+        Optional<Service> service = caServiceRepository.findById(serviceId);
+        if (!service.isPresent()){
+            throw new BadReqException("Service id not present in db ");
+        }
+        Service service1 = service.get();
+        service1.setServiceStatus(false);
+        return caServiceRepository.save(service1);
     }
 }

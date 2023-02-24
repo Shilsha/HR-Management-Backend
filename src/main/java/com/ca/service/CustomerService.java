@@ -112,8 +112,9 @@ public class CustomerService {
         List<Customer> customers = new ArrayList<>();
 
 // TODO search by name and sorting
+//        List<CustomerResponseDto> customerResponse = new ArrayList<>();
 //        if(name != null){
-//            List<CustomerResponseDto> customerResponseDtos = customerRepository.findByCAIdAndName(caUserId,name);
+//            customerResponse = customerRepository.findByCAIdAndName(caUserId,name);
 //        }
 
 
