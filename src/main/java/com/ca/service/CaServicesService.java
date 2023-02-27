@@ -49,22 +49,22 @@ public class CaServicesService {
         return services;
     }
 
-    public List<Service> getServiceByName() {
+    public List<Service> getDistinctService(Long userId) {
 
         logger.info("Get Distinct service");
-        return caServiceRepository.findDistinctService();
+        return caServiceRepository.findDistinctService(userId);
     }
 
-    public List<Service> getSubServiceByService(String serviceName) {
+    public List<Service> getSubServiceByService(String serviceName, Long caId) {
         logger.info("Get SubService by Service name : {}",serviceName);
-        return caServiceRepository.findSubServiceByServiceName(serviceName);
+        return caServiceRepository.findSubServiceByServiceName(serviceName, caId);
     }
 
     public Service deleteService(Long serviceId) {
         logger.info("Delete service by service_id : {}",serviceId);
         Optional<Service> service = caServiceRepository.findById(serviceId);
         if (!service.isPresent()){
-            throw new BadReqException("Service id not present in db ");
+            throw new BadReqException("Service id not present in DB");
         }
         Service service1 = service.get();
         service1.setServiceStatus(false);

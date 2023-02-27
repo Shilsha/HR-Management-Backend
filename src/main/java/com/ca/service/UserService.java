@@ -66,6 +66,12 @@ public class UserService {
             throw new BadReqException("This email id already exist!!");
         }
 
+//        TODO change List<User> to User ...
+        List<User> user2 = userRepository.findByMobile(userRequest.getMobile());
+        System.out.println("size : "+ user2.size());
+        if (user2.size() > 0){
+            throw new BadReqException("This mobile number already exist!!");
+        }
 
         String encodedPassword = null;
         if (userRequest.getPassword() != null){
@@ -171,7 +177,7 @@ public class UserService {
 
 //    <---------------------------------- Get User By Id ------------------------------------->
 
-    public User getUser(Long userId) {
+    public UserResponseDto getUser(Long userId) {
         logger.info("Getting the user id : {}", userId);
         Optional<User> user = Optional.ofNullable(userRepository.findByid(userId));
         if (!user.isPresent()){
@@ -180,10 +186,27 @@ public class UserService {
 
         User user1 = user.get();
 
-        byte[] decodedBytes = Base64.getDecoder().decode(user1.getPassword());
-        String decodedPassword = new String(decodedBytes);
-        user1.setPassword(decodedPassword);
-        return user1;
+        UserResponseDto userResponseDto = UserResponseDto.builder()
+                .id(user1.getId())
+                .firstName(user1.getFirstName())
+                .lastName(user1.getLastName())
+                .email(user1.getEmail())
+                .address(user1.getAddress())
+                .mobile(user1.getMobile())
+                .phone(user1.getPhone())
+                .modifiedDate(user1.getModifiedDate())
+                .createdDate(user1.getCreatedDate())
+                .profileName(user1.getProfileName())
+                .profileUrl(user1.getProfileUrl())
+                .status(user1.isStatus())
+                .panCardNumber(user1.getPanCardNumber())
+                .gender(user1.getGender())
+                .userResponse(user1.getUserResponse())
+                .role(user1.getRole())
+                .otp(user1.getOtp())
+                .otpVerify(user1.isOtpVerify())
+                .build();
+        return userResponseDto;
     }
 
 //    <--------------------------------- Get all User --------------------------------------------->
@@ -219,6 +242,10 @@ public class UserService {
         if (user1.isPresent()){
 
             User user = user1.get();
+
+            if (user.getMobile().equals(userRequest.getMobile())){
+                throw new BadReqException("This mobile number already exist!!");
+            }
 
             if (userRequest.getFirstName() != null){
                 user.setFirstName(userRequest.getFirstName());
@@ -422,5 +449,14 @@ public class UserService {
         logger.info(userId+" deleted successfully");
         return userRepository.save(user1);
 
+    }
+
+    public User getPassword(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        User user1 = user.get();
+        byte[] decodedBytes = Base64.getDecoder().decode(user1.getPassword());
+        String decodedPassword = new String(decodedBytes);
+        user1.setPassword(decodedPassword);
+        return user1;
     }
 }

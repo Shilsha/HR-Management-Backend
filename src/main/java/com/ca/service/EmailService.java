@@ -2,15 +2,19 @@ package com.ca.service;
 
 import com.ca.entity.Document;
 import com.ca.model.request.UserRequestDto;
+import org.apache.commons.codec.CharEncoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -37,16 +41,19 @@ public class EmailService {
         mailSender.send(mimeMessage);
     }
 
-    public void sendDocumentEmail(Document document, String name, String emailCA) throws MessagingException {
+    public void sendDocumentEmail(Document document, String name, String emailCA,MultipartFile file) throws MessagingException {
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
         String createdDate = simpleDateFormat.format(document.getCreatedDate());
         System.out.println("Document url : "+document.getDocUrl());
         MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        String content = "Hello, <br> Here is the copy of uploaded document <br> Link : <br>"+ document.getDocUrl() +
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, CharEncoding.UTF_8);
+        String content = "Hello," +
+                " <br> Here is the copy of uploaded document <br>"+
                 "<br> Uploaded By : "+ name +
                 " <br> Date : " + createdDate;
+        
+        helper.addAttachment(file.getOriginalFilename(), file);
 
         helper.setFrom(email);
         helper.setTo(emailCA);

@@ -44,6 +44,12 @@ public class UserController {
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.getUser(Long.parseLong(userId)), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
+
+    @GetMapping("/get_password_by_userId")
+    public ResponseEntity getPassword(@RequestParam Long userId) throws JsonProcessingException {
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,userService.getPassword(userId), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
+    }
     //all user get
     @GetMapping("/get_all_user")
     public ResponseEntity getAllUser(@RequestParam Integer pageNumber, @RequestParam Integer pageSize) throws JsonProcessingException {

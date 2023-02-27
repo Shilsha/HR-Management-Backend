@@ -118,7 +118,7 @@ public class DocumentService {
             Customer customer1 = customer.get();
             User caDetails = userRepository.findByid(customer1.getCaId());
             logger.info("Document uploaded successfully");
-            emailService.sendDocumentEmail(document, user.getFirstName(), caDetails.getEmail());
+            emailService.sendDocumentEmail(document, user.getFirstName(), caDetails.getEmail(), file);
             logger.info("Document Mail send successfully on CA email : {}",caDetails.getEmail());
             return document;
         }else {

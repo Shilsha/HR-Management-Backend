@@ -41,15 +41,15 @@ public class CaServiceController {
         return apiResponse.getResponse(apiResponse);
     }
 
-    @GetMapping("/get_distinct_service")
-    public ResponseEntity getDistinctService() throws JsonProcessingException {
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.getServiceByName(), ApiMessage.Api_Message);
+    @GetMapping("/get_distinct_service_by_caId")
+    public ResponseEntity getDistinctService(@RequestParam Long caId) throws JsonProcessingException {
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.getDistinctService(caId), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 
     @GetMapping("/get_subService_by_serviceName")
-    public ResponseEntity getSubServiceByServiceName(@RequestParam String serviceName) throws JsonProcessingException {
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.getSubServiceByService(serviceName), ApiMessage.Api_Message);
+    public ResponseEntity getSubServiceByServiceName(@RequestParam String serviceName, @RequestParam Long caId) throws JsonProcessingException {
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caServiceService.getSubServiceByService(serviceName, caId), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 

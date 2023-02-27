@@ -22,24 +22,18 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String firstName;
     private String lastName;
-
     @Column(unique = true)
     private String email;
-
     private String address;
-
+    @Column(unique = true)
     private String mobile;
     private String phone;
-
     private String password;
     private Role role;
-
     private String otp;
     private boolean otpVerify;
-
     private boolean status;
     @CreatedDate
     private Date createdDate;

@@ -28,7 +28,7 @@ public class CAService {
     private CARepository caRepository;
     private Logger logger = LoggerFactory.getLogger(CAController.class);
     @Autowired
-    private CaServiceRepository caSubCaServiceRepository;
+    private CaServiceRepository caServiceRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -112,7 +112,7 @@ public class CAService {
             CA ca1 = ca.get();
             Long userId = ca1.getUserId();
 
-            List<Service> services = caSubCaServiceRepository.findByUserId(userId);
+            List<Service> services = caServiceRepository.findByUserId(userId);
             for (Service service: services) {
                 CaServiceResponseDto caServiceResponse = CaServiceResponseDto.builder()
                         .serviceId(service.getId())
