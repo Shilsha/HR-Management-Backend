@@ -27,6 +27,7 @@ public class RequestService {
     public Request addRequest(Request request) {
         logger.info("Add Request in DB");
         request.setRequestStatus(true);
+        request.setIsResolved(true);
         return requestRepository.save(request);
     }
 
@@ -73,4 +74,20 @@ public class RequestService {
         return requestRepository.save(request1);
 
     }
+
+    public Request resolved(Long requestId) {
+
+        logger.info("Request resolving");
+        Optional<Request> request = requestRepository.findById(requestId);
+
+        if (!request.isPresent()){
+            throw new BadReqException("Request not present in DB");
+        }
+
+        Request request1 = request.get();
+
+        request1.setIsResolved(true);
+        return requestRepository.save(request1);
+    }
+
 }

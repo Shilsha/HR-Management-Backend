@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -82,12 +83,14 @@ public class CustomerService {
         return customerRepository.findById(customerId).get();
     }
 
+    //TODO
     public void updateCustomer(Customer customer){
         Optional<Customer> customer1 = customerRepository.findById(customer.getId());
         if (customer1.isPresent()){
             logger.info("Updating the customer id :"+customer.getId());
             Customer customer2 = customer1.get();
-            customer2.setUserId(customer.getUserId());
+            customerRepository.save(customer);
+
         }
     }
 
@@ -107,7 +110,7 @@ public class CustomerService {
 
     }
 
-    public List<CustomerResponseDto> getCustomerByCAId(Long caUserId, Integer pageNumber, Integer pageSize, String name) {
+    public List<CustomerResponseDto> getCustomerByCAId(Long caUserId, Integer pageNumber, Integer pageSize, String name, String sortBy) {
         logger.info("Getting customer by CA id {}",caUserId);
         List<Customer> customers = new ArrayList<>();
 
@@ -121,7 +124,7 @@ public class CustomerService {
         if (pageNumber == -1 && pageSize == -1){
             customers = customerRepository.findByCAId(caUserId);
         }else {
-            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            Pageable pageable = PageRequest.of(pageNumber,pageSize,Sort.by(sortBy).descending());
             Page<Customer> pageCustomer = customerRepository.findByCAid(caUserId,pageable);
             customers = pageCustomer.getContent();
         }

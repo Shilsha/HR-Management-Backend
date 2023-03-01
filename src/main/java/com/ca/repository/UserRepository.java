@@ -1,5 +1,6 @@
 package com.ca.repository;
 
+import com.amazonaws.services.apigateway.model.Op;
 import com.ca.entity.Customer;
 import com.ca.entity.User;
 import com.ca.utils.Role;
@@ -42,6 +43,12 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query(value = "select * from user u where status=true",nativeQuery = true)
     Page<User> findAll(Pageable pageable);
 
-    @Query(value = "select * from user u where mobile=?1", nativeQuery = true)
-    List<User> findByMobile(String mobile);
+    @Query(value = "select * from user u where mobile=?1 and status=true", nativeQuery = true)
+    Optional<User> findByMobile(String mobile);
+
+    @Query(value = "select * from user u where pan_card_number=?1 and status=true", nativeQuery = true)
+    Optional<User> findByPanCardNumber(String panCardNumber);
+
+    @Query(value = "select * from user u where aadhaar_card_number=?1 and status=true", nativeQuery = true)
+    Optional<User> findByAadhaarCardNumber(String aadhaarCardNumber);
 }

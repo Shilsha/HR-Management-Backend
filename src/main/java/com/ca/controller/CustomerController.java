@@ -55,9 +55,10 @@ public class CustomerController {
 
     @GetMapping("/get_customer_by_caId")
     public ResponseEntity getCustomerOfCA(@RequestParam Long id, @RequestParam Integer pageNumber,
-                                          @RequestParam Integer pageSize, @RequestParam(required = false) String name) throws JsonProcessingException {
+                                          @RequestParam Integer pageSize, @RequestParam(required = false) String name,
+                                          @RequestParam(required = false, defaultValue = "id") String sortBy) throws JsonProcessingException {
 
-        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, customerService.getCustomerByCAId(id, pageNumber, pageSize, name), ApiMessage.Api_Message);
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true, customerService.getCustomerByCAId(id, pageNumber, pageSize, name, sortBy), ApiMessage.Api_Message);
         return apiResponse.getResponse(apiResponse);
     }
 

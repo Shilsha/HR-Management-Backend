@@ -24,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 import org.apache.commons.io.FilenameUtils;
 
@@ -99,6 +100,7 @@ public class DocumentService {
                         .userId(userId)
                         .docUrl(documentUrl)
                         .serviceId(serviceId)
+                        .documentStatus(true)
                         .build();
 
                 documentRepository.save(document);
@@ -126,7 +128,7 @@ public class DocumentService {
         }
     }
 
-    public List<DocumentResponseDto> getDocument(Long userId, Integer pageNumber, Integer pageSize) {
+    public List<DocumentResponseDto> getDocument(Long userId, Integer pageNumber, Integer pageSize, String sortBy) {
 
         List<Document> documentList = new ArrayList<>();
         List<DocumentResponseDto> documentResponse = new ArrayList<>();
@@ -134,10 +136,11 @@ public class DocumentService {
         if (pageNumber == -1 && pageSize == -1){
             logger.info("Pagination not present");
             documentList = documentRepository.findByUserid(userId);
+//            documentList = documentRepository.findAllByOrderByUserIdDesc(userId);
         }else {
             logger.info("Pagination present pageNumber :{}",pageNumber);
             logger.info("PageSize :{}",pageSize);
-            Pageable pageable = PageRequest.of(pageNumber, pageSize);
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy).descending());
             Page<Document> pageDocument = documentRepository.findByUserId(userId, pageable);
             documentList = pageDocument.getContent();
         }
@@ -149,12 +152,15 @@ public class DocumentService {
 
         for(Document document: documentList){
             String serviceName=null;
+            String subService = null;
             if (!((document.getServiceId() == null) || (document.getServiceId() == -1))){
                 logger.info("Service id is {}",document.getServiceId());
 
                 Optional<Service> service = caServiceRepository.findById(document.getServiceId());
                 Service service1 = service.get();
                 serviceName = service1.getServiceName();
+                subService = service1.getSubService();
+
             }
 
             DocumentResponseDto documentResponseDto = DocumentResponseDto.builder()
@@ -163,6 +169,7 @@ public class DocumentService {
                     .docName(document.getDocName())
                     .serviceId(document.getServiceId())
                     .serviceName(serviceName)
+                    .subService(subService)
                     .userId(document.getUserId())
                     .createdDate(document.getCreatedDate())
                     .modifiedDate(document.getModifiedDate())
@@ -205,5 +212,19 @@ public class DocumentService {
             documentResponseList.add(documentResponse);
         }
         return documentResponseList;
+    }
+
+    public Document deleteDocument(Long docId) {
+
+        logger.info("Delete document by docId :{}", docId);
+        Optional<Document> document = documentRepository.findById(docId);
+
+        if (!document.isPresent()){
+            throw new BadReqException("Doc id not present in DB :"+docId);
+        }
+
+        Document document1 = document.get();
+        document1.setDocumentStatus(false);
+        return documentRepository.save(document1);
     }
 }

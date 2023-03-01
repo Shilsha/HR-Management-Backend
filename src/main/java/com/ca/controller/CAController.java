@@ -49,6 +49,13 @@ public class CAController {
         return apiResponse.getResponse(apiResponse);
     }
 
+    @PutMapping("/assign_customer")
+    public ResponseEntity assignCustomer(@RequestParam Long customerId, @RequestParam Long caId) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,caService.assignCustomer(customerId, caId), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
+    }
+
     @PutMapping("/update_CA")
     public void updateCA(@RequestBody CA ca){
 

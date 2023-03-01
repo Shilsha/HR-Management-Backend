@@ -12,10 +12,10 @@ import java.util.List;
 @Repository
 public interface SubCARepository extends JpaRepository<SubCA, Long> {
 
-    @Query(value = "select * from subca s where ca_id=?1",nativeQuery = true)
+    @Query(value = "select * from subca s where ca_id=?1 order by id desc",nativeQuery = true)
     List<SubCA> findByCAId(Long caId);
 
-    @Query(value = "select * from subca s where ca_id=?1",nativeQuery = true)
+    @Query(value = "select * from subca s where ca_id=?1 order by id desc",nativeQuery = true)
     Page<SubCA> findByCAid(Long caId, Pageable pageable);
 
     @Query(value = "select * from subca s where user_id=?1",nativeQuery = true)

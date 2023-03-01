@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    @Query(value = "select * from customer c where ca_id=?1",nativeQuery = true)
+    @Query(value = "select * from customer c where ca_id=?1 order by id desc",nativeQuery = true)
     List<Customer> findByCAId(Long caId);
 
     @Query(value = "select * from customer c where user_id=?1",nativeQuery = true)

@@ -66,11 +66,28 @@ public class UserService {
             throw new BadReqException("This email id already exist!!");
         }
 
-//        TODO change List<User> to User ...
-        List<User> user2 = userRepository.findByMobile(userRequest.getMobile());
-        System.out.println("size : "+ user2.size());
-        if (user2.size() > 0){
+        logger.info("Check mobile number exist in DB");
+        Optional<User> user2 = userRepository.findByMobile(userRequest.getMobile());
+        if (user2.isPresent()){
             throw new BadReqException("This mobile number already exist!!");
+        }
+
+//        Check Pan card number present in DB
+        if (userRequest.getPanCardNumber() != null){
+            logger.info("Check PanCardNumber exist in DB");
+            Optional<User> user3 = userRepository.findByPanCardNumber(userRequest.getPanCardNumber());
+            if (user3.isPresent()){
+                throw new BadReqException("This Pan Card Number already exist!!");
+            }
+        }
+
+//        Check Aadhaar Card Number present in DB
+        if (userRequest.getAadhaarCardNumber() != null){
+            logger.info("Check Aadhaar Card Number exist in DB");
+            Optional<User> user4 = userRepository.findByAadhaarCardNumber(userRequest.getAadhaarCardNumber());
+            if (user4.isPresent()){
+                throw new BadReqException("This Aadhaar Card Number already exist");
+            }
         }
 
         String encodedPassword = null;
@@ -96,6 +113,7 @@ public class UserService {
                 .profileName(null)
                 .gender(userRequest.getGender())
                 .panCardNumber(userRequest.getPanCardNumber())
+                .aadhaarCardNumber(userRequest.getAadhaarCardNumber())
                 .build();
 
         userRepository.save(user);
@@ -118,6 +136,7 @@ public class UserService {
                 .profileUrl(user.getProfileUrl())
                 .profileName(user.getProfileName())
                 .panCardNumber(user.getPanCardNumber())
+                .aadhaarCardNumber(user.getAadhaarCardNumber())
                 .gender(user.getGender())
                 .build();
 
@@ -200,6 +219,7 @@ public class UserService {
                 .profileUrl(user1.getProfileUrl())
                 .status(user1.isStatus())
                 .panCardNumber(user1.getPanCardNumber())
+                .aadhaarCardNumber(user1.getAadhaarCardNumber())
                 .gender(user1.getGender())
                 .userResponse(user1.getUserResponse())
                 .role(user1.getRole())
@@ -274,6 +294,9 @@ public class UserService {
             if (userRequest.getGender() != null){
                 user.setGender(userRequest.getGender());
             }
+            if (userRequest.getAadhaarCardNumber() != null){
+                user.setAadhaarCardNumber(userRequest.getAadhaarCardNumber());
+            }
 
             userRepository.save(user);
 
@@ -296,6 +319,7 @@ public class UserService {
                     .profileName(user.getProfileName())
                     .gender(user.getGender())
                     .panCardNumber(user.getPanCardNumber())
+                    .aadhaarCardNumber(user.getAadhaarCardNumber())
                     .build();
 
             logger.info(id+" updated successfully");
@@ -325,7 +349,7 @@ public class UserService {
         User user1 = user.get();
 
         if (!(type.equals(".jpg") || type.equals(".png"))){
-            throw new BadReqException("Image extension is not JPEG or PNG !!");
+            throw new BadReqException("Only JPEG and PNG image are allowed !!");
         }
 
         Double imageSize = image.getSize() * 0.00000095367432;
@@ -377,6 +401,7 @@ public class UserService {
                 .profileName(user1.getProfileName())
                 .gender(user1.getGender())
                 .panCardNumber(user1.getPanCardNumber())
+                .aadhaarCardNumber(user1.getAadhaarCardNumber())
                 .build();
 
         return userResponse;

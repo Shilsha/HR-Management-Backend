@@ -27,6 +27,7 @@ public class Request {
     private Date createdDate;
     @LastModifiedDate
     private Date modifiedDate;
+    private Boolean isResolved;
     private Boolean requestStatus;
 
 }

@@ -2,13 +2,16 @@ package com.ca.service;
 
 import com.ca.controller.CAController;
 import com.ca.entity.CA;
+import com.ca.entity.Customer;
 import com.ca.entity.Service;
 import com.ca.entity.User;
 import com.ca.exception.BadReqException;
 import com.ca.model.response.CaServiceResponseDto;
+import com.ca.model.response.CustomerResponseDto;
 import com.ca.model.response.UserResponseDto;
 import com.ca.repository.CARepository;
 import com.ca.repository.CaServiceRepository;
+import com.ca.repository.CustomerRepository;
 import com.ca.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,8 @@ public class CAService {
     private CaServiceRepository caServiceRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     public CA createCA(CA ca) {
         logger.info("New CA Created");
@@ -164,5 +169,40 @@ public class CAService {
                 .build();
 
         return userResponse;
+    }
+
+    public CustomerResponseDto assignCustomer(Long customerId, Long caId) {
+        logger.info("Assign customer to another sub-ca");
+
+        Optional<Customer> customer = customerRepository.findById(customerId);
+
+        if (!customer.isPresent()){
+            throw new BadReqException("Customer not present in DB");
+        }
+
+        Customer customer1 = customer.get();
+        customer1.setCaId(caId);
+        Customer customer2 = customerRepository.save(customer1);
+
+        User ca = userRepository.findById(caId).get();
+
+        User user = userRepository.findById(customer2.getUserId()).get();
+
+        CustomerResponseDto customerResponse = CustomerResponseDto.builder()
+                .id(customer2.getId())
+                .caId(customer2.getCaId())
+                .caName(user.getFirstName())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .address(user.getAddress())
+                .mobile(user.getMobile())
+                .phone(user.getPhone())
+                .gender(user.getGender())
+                .panCardNumber(user.getPanCardNumber())
+                .userResponse(user.getUserResponse())
+                .build();
+
+        return customerResponse;
     }
 }

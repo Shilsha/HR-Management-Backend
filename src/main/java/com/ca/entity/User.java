@@ -42,7 +42,10 @@ public class User {
     private String profileUrl;
     private String profileName;
     private String gender;
+    @Column(unique = true)
     private String panCardNumber;
     private UserResponse userResponse;
+    @Column(unique = true)
+    private String aadhaarCardNumber;
 
 }

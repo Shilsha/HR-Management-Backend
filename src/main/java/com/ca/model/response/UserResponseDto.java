@@ -28,6 +28,7 @@ public class UserResponseDto {
     private String profileName;
     private String gender;
     private String panCardNumber;
+    private String aadhaarCardNumber;
     private UserResponse userResponse;
 
 }

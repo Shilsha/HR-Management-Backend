@@ -24,5 +24,6 @@ public class UserRequestDto {
     private Long addedBy;
     private String gender;
     private String panCardNumber;
+    private String aadhaarCardNumber;
 
 }

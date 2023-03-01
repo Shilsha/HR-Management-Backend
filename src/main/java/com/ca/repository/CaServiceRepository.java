@@ -12,10 +12,10 @@ import java.util.List;
 @Repository
 public interface CaServiceRepository extends JpaRepository<Service, Long> {
 
-    @Query(value = "select * from service s where user_id=?1 and service_status=1", nativeQuery = true)
+    @Query(value = "select * from service s where user_id=?1 and service_status=true", nativeQuery = true)
     List<Service> findByUserId(Long userId);
 
-    @Query(value = "select * from service s where service_status=1 and user_id=?1 group by service_name", nativeQuery = true)
+    @Query(value = "select * from service s where service_status=1 and user_id=?1 group by service_name order by id", nativeQuery = true)
     List<Service> findDistinctService(Long userId);
 
     @Query(value = "select * from service s where service_name=?1 and service_status=1 and user_id=?2", nativeQuery = true)

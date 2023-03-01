@@ -20,5 +20,6 @@ public class DocumentResponseDto {
     private Date createdDate;
     private Date modifiedDate;
     private String serviceName;
+    private String subService;
 
 }

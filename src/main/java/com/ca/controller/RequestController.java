@@ -39,6 +39,13 @@ public class RequestController {
         return apiResponse.getResponse(apiResponse);
     }
 
+    @PutMapping("/resolved_by_id")
+    public ResponseEntity resolved(@RequestParam Long requestId) throws JsonProcessingException {
+
+        ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,requestService.resolved(requestId), ApiMessage.Api_Message);
+        return apiResponse.getResponse(apiResponse);
+    }
+
     @DeleteMapping("/delete_request")
     public ResponseEntity deleteRequest(Long requestId) throws JsonProcessingException {
         ApiResponse apiResponse = new ApiResponse(HttpStatus.OK,true,requestService.deleteRequest(requestId), ApiMessage.Api_Message);

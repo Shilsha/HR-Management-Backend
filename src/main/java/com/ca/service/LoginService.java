@@ -139,6 +139,11 @@ public class LoginService {
             throw new BadReqException("Incorrect email");
         }
          User user = user1.get();
+
+        if (user.isOtpVerify()){
+            logger.info("This email already verified!!");
+            throw new BadReqException("This email is already verified");
+        }
         String otp = otpVerifyRequest.getOtp();
 
         if (otp.length() == 6){

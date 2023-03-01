@@ -15,18 +15,24 @@ import java.util.Date;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-public class Document {
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String docName;
-    private Long userId;
+    private String name;
+    private String description;
+    private String duration;
     private String docUrl;
+    private String docName;
+    private String resolution;
     @CreatedDate
     private Date createdDate;
     @LastModifiedDate
     private Date modifiedDate;
-    private Long serviceId;
-    private Boolean documentStatus;
+    private Boolean taskStatus;
+    private Long assignedId;
+    private Long assigneeId;
+    private Long createdById;
+
 }
