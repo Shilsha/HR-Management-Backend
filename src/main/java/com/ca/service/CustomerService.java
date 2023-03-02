@@ -37,7 +37,7 @@ public class CustomerService {
         return customerRepository.save(customer);
     }
 
-    public List<UserResponseDto> getAllCustomer(Integer pageNumber, Integer pageSize){
+    public List<CustomerResponseDto> getAllCustomer(Integer pageNumber, Integer pageSize){
         logger.info("Getting all customers");
         List<User> customers = new ArrayList<>();
         int role = 2; //CUSTOMER
@@ -50,32 +50,38 @@ public class CustomerService {
             customers = pageCustomer.getContent();
         }
 
-        List<UserResponseDto> userResponse = new ArrayList<>();
+        List<CustomerResponseDto> customerResponse = new ArrayList<>();
+
 
         for (User user1: customers) {
-            UserResponseDto userResponseDto = UserResponseDto.builder()
-                    .id(user1.getId())
+
+            Customer customer = customerRepository.findUserId(user1.getId());
+            User ca = userRepository.findById(customer.getCaId()).get();
+
+            CustomerResponseDto customerResponseDto = CustomerResponseDto.builder()
+                    .id(customer.getId())
+                    .userId(customer.getUserId())
+                    .caId(customer.getCaId())
+                    .caName(ca.getFirstName())
                     .firstName(user1.getFirstName())
                     .lastName(user1.getLastName())
                     .email(user1.getEmail())
                     .address(user1.getAddress())
                     .mobile(user1.getMobile())
                     .phone(user1.getPhone())
-                    .role(user1.getRole())
-                    .otp(user1.getOtp())
-                    .otpVerify(user1.isOtpVerify())
-                    .status(user1.isStatus())
+                    .panCardNumber(user1.getPanCardNumber())
+                    .aadhaarCardNumber(user1.getAadhaarCardNumber())
+                    .gender(user1.getGender())
+                    .userResponse(user1.getUserResponse())
                     .createdDate(user1.getCreatedDate())
                     .modifiedDate(user1.getModifiedDate())
-                    .profileUrl(user1.getProfileUrl())
                     .profileName(user1.getProfileName())
-                    .gender(user1.getGender())
-                    .panCardNumber(user1.getPanCardNumber())
+                    .profileUrl(user1.getProfileUrl())
                     .build();
 
-            userResponse.add(userResponseDto);
+            customerResponse.add(customerResponseDto);
         }
-        return userResponse;
+        return customerResponse;
     }
 
     public Customer getCustomer(Long customerId){
@@ -98,12 +104,12 @@ public class CustomerService {
         Optional<Customer> customer = customerRepository.findByUserId(customerUserId);
         if(customer.isPresent())
         {
-            Customer customerupdated= customer.get();
+            Customer customer1= customer.get();
             User user = userRepository.findById(customerUserId).get();
             user.setStatus(false);
             userRepository.save(user);
-            customerupdated.setCustomerStatus(false);
-            return customerRepository.save(customerupdated);
+            customer1.setCustomerStatus(false);
+            return customerRepository.save(customer1);
         }else {
             throw new BadReqException(ApiMessage.Customer_not_Deleted);
         }
@@ -132,8 +138,8 @@ public class CustomerService {
         List<CustomerResponseDto> customerResponse = new ArrayList<>();
 
         for (Customer c: customers) {
-            User user;
-            user = userRepository.findById(c.getUserId()).get();
+
+            User user = userRepository.findById(c.getUserId()).get();
             User user1= userRepository.findById(caUserId).get();
 
             CustomerResponseDto customer = CustomerResponseDto.builder()
@@ -148,8 +154,13 @@ public class CustomerService {
                     .mobile(user.getMobile())
                     .phone(user.getPhone())
                     .panCardNumber(user.getPanCardNumber())
+                    .aadhaarCardNumber(user.getAadhaarCardNumber())
                     .gender(user.getGender())
                     .userResponse(user.getUserResponse())
+                    .createdDate(user.getCreatedDate())
+                    .modifiedDate(user.getModifiedDate())
+                    .profileName(user.getProfileName())
+                    .profileUrl(user.getProfileUrl())
                     .build();
 
             customerResponse.add(customer);
@@ -187,6 +198,7 @@ public class CustomerService {
                 .profileName(user1.getProfileName())
                 .gender(user1.getGender())
                 .panCardNumber(user1.getPanCardNumber())
+                .userResponse(user1.getUserResponse())
                 .build();
 
         return userResponse;

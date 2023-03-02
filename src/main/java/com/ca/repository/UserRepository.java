@@ -28,10 +28,10 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query(value = "select * from user u where role=?1 and first_name like CONCAT(?2,'%') and status=true", nativeQuery = true)
     List<User> findNameStartwith(int role, String name);
 
-    @Query(value = "select * from user u where role=?1", nativeQuery = true)
+    @Query(value = "select * from user u where role=?1 and status=true order by id desc", nativeQuery = true)
     List<User> findByRole(int role);
 
-    @Query(value = "select * from user u where role=?1", nativeQuery = true)
+    @Query(value = "select * from user u where role=?1 and status=true order by id desc", nativeQuery = true)
     Page<User> findByrole(int role,Pageable pageable);
 
     @Query(value = "select * from user u where id=?1 and role=?2 and status =true", nativeQuery = true)

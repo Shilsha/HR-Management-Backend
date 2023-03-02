@@ -1,10 +1,11 @@
 package com.ca.service;
 
-import com.amazonaws.services.apigateway.model.Op;
 import com.ca.entity.Request;
 import com.ca.entity.User;
 import com.ca.exception.BadReqException;
+import com.ca.model.response.RequestResponse;
 import com.ca.repository.RequestRepository;
+import com.ca.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class RequestService {
     @Autowired
     private RequestRepository requestRepository;
     private Logger logger = LoggerFactory.getLogger(UserService.class);
+    @Autowired
+    private UserRepository userRepository;
 
     public Request addRequest(Request request) {
         logger.info("Add Request in DB");
@@ -31,7 +34,7 @@ public class RequestService {
         return requestRepository.save(request);
     }
 
-    public List<Request> getRequestByCAId(Long caId, Integer pageNumber, Integer pageSize) {
+    public List<RequestResponse> getRequestByCAId(Long caId, Integer pageNumber, Integer pageSize) {
 
         logger.info("Get Request by CA id : {}",caId);
         List<Request> requests = new ArrayList<>();
@@ -43,10 +46,36 @@ public class RequestService {
             Page<Request> pageRequest = requestRepository.findByCAid(caId,pageable);
             requests = pageRequest.getContent();
         }
-        return requests;
+
+        List<RequestResponse> requestResponses = new ArrayList<>();
+
+        for (Request request : requests){
+
+            User ca = userRepository.findById(caId).get();
+
+            User customer = userRepository.findById(request.getCustomerId()).get();
+
+            RequestResponse requestResponse = RequestResponse.builder()
+                    .requestId(request.getId())
+                    .text(request.getText())
+                    .caId(request.getCaId())
+                    .caName(ca.getFirstName()+" "+ca.getLastName())
+                    .customerId(request.getCustomerId())
+                    .customerName(customer.getFirstName()+" "+customer.getLastName())
+                    .createdDate(request.getCreatedDate())
+                    .modifiedDate(request.getModifiedDate())
+                    .isResolved(request.getIsResolved())
+                    .requestStatus(request.getRequestStatus())
+                    .build();
+
+            requestResponses.add(requestResponse);
+        }
+
+        logger.info("Request send successfully");
+        return requestResponses;
     }
 
-    public List<Request> getRequestByCustomerId(Long customerId, Integer pageNumber, Integer pageSize) {
+    public List<RequestResponse> getRequestByCustomerId(Long customerId, Integer pageNumber, Integer pageSize) {
 
         logger.info("Get Request by customer id : {}", customerId);
         List<Request> requests = new ArrayList<>();
@@ -59,7 +88,29 @@ public class RequestService {
             requests = pageRequest.getContent();
         }
 
-        return requests;
+        List<RequestResponse> requestResponses = new ArrayList<>();
+
+        for (Request request : requests){
+            User ca = userRepository.findById(request.getCaId()).get();
+            User customer = userRepository.findById(request.getCustomerId()).get();
+
+            RequestResponse requestResponse = RequestResponse.builder()
+                    .requestId(request.getId())
+                    .text(request.getText())
+                    .caId(request.getCaId())
+                    .caName(ca.getFirstName()+" "+ca.getLastName())
+                    .customerId(request.getCustomerId())
+                    .customerName(customer.getFirstName()+" "+customer.getLastName())
+                    .createdDate(request.getCreatedDate())
+                    .modifiedDate(request.getModifiedDate())
+                    .isResolved(request.getIsResolved())
+                    .requestStatus(request.getRequestStatus())
+                    .build();
+
+            requestResponses.add(requestResponse);
+        }
+        logger.info("Request send successfully");
+        return requestResponses;
     }
 
     public Request deleteRequest(Long requestId) {
@@ -86,7 +137,7 @@ public class RequestService {
 
         Request request1 = request.get();
 
-        request1.setIsResolved(true);
+        request1.setIsResolved(false);
         return requestRepository.save(request1);
     }
 

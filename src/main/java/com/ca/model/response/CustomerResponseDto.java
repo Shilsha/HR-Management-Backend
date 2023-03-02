@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -23,6 +25,11 @@ public class CustomerResponseDto {
     private String mobile;
     private String phone;
     private String panCardNumber;
+    private String aadhaarCardNumber;
     private String gender;
     private UserResponse userResponse;
+    private Date createdDate;
+    private Date modifiedDate;
+    private String profileUrl;
+    private String profileName;
 }
