@@ -39,7 +39,7 @@ public class LoginController {
         System.out.println("Email Validate: " + emailValidation);
             if (emailValidation==true || emailValidation==false) {
 
-                ApiResponse apiResponse = new ApiResponse(HttpStatus.OK, true, hrLoginService.hrlogin(loginRequestDto), ApiMessage.Api_Message);
+                ApiResponse apiResponse = hrLoginService.hrlogin(loginRequestDto);
                 return apiResponse.getResponse(apiResponse);
             } else {
                 throw new BadReqException(ApiMessage.Enter_VALID_EMAIL);
@@ -50,7 +50,9 @@ public class LoginController {
            @PostMapping(value = "/emp/login")
            public ResponseEntity empLogin(@RequestBody LoginRequestDto loginRequestDto)
                    throws Exception {
-               ApiResponse apiResponse = new ApiResponse(HttpStatus.OK, true, hrLoginService.emplogin(loginRequestDto), ApiMessage.Api_Message);
+               //ApiResponse apiResponse = new ApiResponse(HttpStatus.OK, true, hrLoginService.emplogin(loginRequestDto), ApiMessage.Api_Message);
+              // return apiResponse.getResponse(apiResponse);
+               ApiResponse apiResponse = hrLoginService.emplogin(loginRequestDto);
                return apiResponse.getResponse(apiResponse);
            }
 
@@ -90,7 +92,9 @@ public class LoginController {
         try{
         if (emailValidation) {
 
-            ApiResponse apiResponse = new ApiResponse(HttpStatus.OK, true, hrLoginService.forgetPasswordEmailVerify(loginRequestDto), ApiMessage.Api_Message);
+            //ApiResponse apiResponse = new ApiResponse(HttpStatus.OK, true, hrLoginService.forgetPasswordEmailVerify(loginRequestDto), ApiMessage.Api_Message);
+            //return apiResponse.getResponse(apiResponse);
+            ApiResponse apiResponse = hrLoginService.forgetPasswordEmailVerify(loginRequestDto);
             return apiResponse.getResponse(apiResponse);
         }
         else {
@@ -109,8 +113,11 @@ public class LoginController {
 
             throws Exception {
 
-            ApiResponse apiResponse = new ApiResponse(HttpStatus.OK, true, hrLoginService.forgetPasswordOtpVerify(forgetPasswordRequestDto), ApiMessage.Api_Message);
-            return apiResponse.getResponse(apiResponse);
+            //ApiResponse apiResponse = new ApiResponse(HttpStatus.OK, true, hrLoginService.forgetPasswordOtpVerify(forgetPasswordRequestDto), ApiMessage.Api_Message);
+            //return apiResponse.getResponse(apiResponse);
+        ApiResponse apiResponse = hrLoginService.forgetPasswordOtpVerify(forgetPasswordRequestDto);
+        return apiResponse.getResponse(apiResponse);
+
     }
     @PostMapping(value = "/forget-password/create-password", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity hrForgetCreatePassword(@RequestBody LoginRequestDto loginRequestDto)
@@ -125,7 +132,9 @@ public class LoginController {
         try{
         if (emailValidation) {
 
-            ApiResponse apiResponse = new ApiResponse(HttpStatus.OK, true, hrLoginService.hrForgetCreatePassword(loginRequestDto), ApiMessage.Api_Message);
+            //ApiResponse apiResponse = new ApiResponse(HttpStatus.OK, true, hrLoginService.hrForgetCreatePassword(loginRequestDto), ApiMessage.Api_Message);
+            //return apiResponse.getResponse(apiResponse);
+            ApiResponse apiResponse = hrLoginService.hrForgetCreatePassword(loginRequestDto);
             return apiResponse.getResponse(apiResponse);
         }
         else {

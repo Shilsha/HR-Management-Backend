@@ -10,8 +10,11 @@ import com.hr.management.request.ForgetPasswordRequestDto;
 import com.hr.management.request.LoginRequestDto;
 import com.hr.management.response.LoginResponseDto;
 import com.hr.management.utils.ApiMessage;
+import com.hr.management.utils.ApiResponse;
 import com.hr.management.utils.BadReqException;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -36,8 +39,10 @@ public class LoginService {
     @Autowired
     ForgotPasswordRepo forgotPasswordRepo;
 
-    public LoginResponseDto hrlogin(LoginRequestDto loginRequestDto) throws Exception {
+    public ApiResponse hrlogin(LoginRequestDto loginRequestDto) throws Exception {
         //logger.info("The user is candidate");
+        ApiResponse apiResponse=null;
+        //apiResponse=new ApiResponse(HttpStatus.OK, true, hrLoginService.hrlogin(loginRequestDto), ApiMessage.Api_Message);
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                 + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
@@ -48,13 +53,15 @@ public class LoginService {
         if (loginRequestDto.getEmail().isEmpty() || !emailValidation) {
             // logger.info("Please Enter valid email");
             loginResponseDto.setMessage(ApiMessage.ENTER_EMAIL);
-            return loginResponseDto;
+            apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.ENTER_EMAIL);
+            return apiResponse;
             //throw new BadReqException(ApiMessage.ENTER_EMAIL);
         }
         if (loginRequestDto.getEmail().isEmpty() || loginRequestDto.getPassword().length() < 4) {
             // logger.info("please Enter valid password");
             loginResponseDto.setMessage(ApiMessage.ENTER_PASSWORD);
-            return loginResponseDto;
+            apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.ENTER_PASSWORD);
+            return apiResponse;
             // throw new BadReqException(ApiMessage.ENTER_PASSWORD);
         }
         if (!loginRequestDto.getEmail().isEmpty() || !loginRequestDto.getPassword().isEmpty()) {
@@ -64,15 +71,19 @@ public class LoginService {
                 HrDetails hrPassword = hrRepositoy.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword());
                 if (hrPassword == null) {
                     loginResponseDto.setMessage(ApiMessage.INVALID_credential_password);
-                    return loginResponseDto;
+                    apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.INVALID_credential_password);
+                    return apiResponse;
                 } else {
                     HrDetails res = hrRepositoy.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword());
                     loginResponseDto = new LoginResponseDto(res.getId(), res.getFirstName());
                     loginResponseDto.setMessage("You have successful login");
+                    apiResponse=new ApiResponse(HttpStatus.OK, true, loginResponseDto, ApiMessage.Api_Message);
+                    return apiResponse;
                 }
             } else {
                 loginResponseDto.setMessage(ApiMessage.INVALID_credential_email);
-                return loginResponseDto;
+                apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.INVALID_credential_email);
+                return apiResponse;
             }
         }
         /*HrDetails hr = hrRepositoy.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword());
@@ -85,11 +96,12 @@ public class LoginService {
         else{
         loginResponseDto = new LoginResponseDto(hr.getEmployeeId(),hr.getFirstName());
             loginResponseDto.setMessage("You have successful login");}*/
-        return loginResponseDto;
+        return apiResponse;
     }
 
-    public LoginResponseDto emplogin(LoginRequestDto loginRequestDto) throws Exception {
+    public ApiResponse emplogin(LoginRequestDto loginRequestDto) throws Exception {
         //logger.info("The user is candidate");
+        ApiResponse apiResponse= null;
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                 + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
@@ -100,13 +112,15 @@ public class LoginService {
         if (loginRequestDto.getEmail().isEmpty() || !emailValidation) {
             // logger.info("Please Enter valid email");
             loginResponseDto.setMessage(ApiMessage.ENTER_EMAIL);
-            return loginResponseDto;
+            apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.ENTER_EMAIL);
+            return apiResponse;
             //throw new BadReqException(ApiMessage.ENTER_EMAIL);
         }
         if (loginRequestDto.getEmail().isEmpty() || loginRequestDto.getPassword().length() < 4) {
             // logger.info("please Enter valid password");
             loginResponseDto.setMessage(ApiMessage.ENTER_PASSWORD);
-            return loginResponseDto;
+            apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.ENTER_PASSWORD);
+            return apiResponse;
             // throw new BadReqException(ApiMessage.ENTER_PASSWORD);
         }
         if (!loginRequestDto.getEmail().isEmpty() || !loginRequestDto.getPassword().isEmpty()) {
@@ -116,15 +130,19 @@ public class LoginService {
                 EmployeeDetails empPassword = empRepository.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword());
                 if (empPassword == null) {
                     loginResponseDto.setMessage(ApiMessage.INVALID_credential_password);
-                    return loginResponseDto;
+                    apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.INVALID_credential_password);
+                    return apiResponse;
                 } else {
                     EmployeeDetails res = empRepository.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword());
                     loginResponseDto = new LoginResponseDto(res.getId(), res.getFirstName());
                     loginResponseDto.setMessage("You have successful login");
+                    apiResponse=new ApiResponse(HttpStatus.OK, true, loginResponseDto, ApiMessage.Api_Message);
+                    return apiResponse;
                 }
             } else {
                 loginResponseDto.setMessage(ApiMessage.INVALID_credential_email);
-                return loginResponseDto;
+                apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.INVALID_credential_email);
+                return apiResponse;
             }
         }
         /*HrDetails hr = hrRepositoy.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword());
@@ -137,12 +155,14 @@ public class LoginService {
         else{
         loginResponseDto = new LoginResponseDto(hr.getEmployeeId(),hr.getFirstName());
             loginResponseDto.setMessage("You have successful login");}*/
-        return loginResponseDto;
+        return apiResponse;
     }
 
 
-    public LoginResponseDto forgetPasswordEmailVerify(LoginRequestDto loginRequestDto) {
+    public ApiResponse forgetPasswordEmailVerify(LoginRequestDto loginRequestDto) throws  Exception {
         //logger.info("The user is candidate");
+        ApiResponse apiResponse=null;
+
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                 + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
@@ -153,13 +173,15 @@ public class LoginService {
         if (loginRequestDto.getEmail().isEmpty() || !emailValidation) {
             // logger.info("Please Enter valid email");
             loginResponseDto.setMessage(ApiMessage.ENTER_EMAIL);
-            return loginResponseDto;
+            apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.ENTER_EMAIL);
+            return apiResponse;
             //throw new BadReqException(ApiMessage.ENTER_EMAIL);
         }
         if (loginRequestDto.getEmpType().isEmpty() || (!loginRequestDto.getEmpType().equals("HR") & !loginRequestDto.getEmpType().equals("EMPLOYEE"))) {
             // logger.info("please Enter valid password");
             loginResponseDto.setMessage(ApiMessage.ENTER_EMP_TYPE);
-            return loginResponseDto;
+            apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.ENTER_EMP_TYPE);
+            return apiResponse;
             // throw new BadReqException(ApiMessage.ENTER_PASSWORD);
         }
         if (!loginRequestDto.getEmail().isEmpty()) {
@@ -178,7 +200,8 @@ public class LoginService {
                     } catch (Exception e) {
                         System.out.println("send mail error" + e);
                     }
-                    return loginResponseDto;
+                    apiResponse=new ApiResponse(HttpStatus.OK, true, loginResponseDto, ApiMessage.Api_Message);
+                    return apiResponse;
                /* // EmployeeDetails empPassword = empRepository.findByPassword(loginRequestDto.getPassword());
                 EmployeeDetails empPassword = empRepository.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword());
                 if(empPassword==null){
@@ -192,7 +215,8 @@ public class LoginService {
                 }*/
                 } else {
                     loginResponseDto.setMessage(ApiMessage.INVALID_credential_email);
-                    return loginResponseDto;
+                    apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.INVALID_credential_email);
+                    return apiResponse;
                 }
             }
             if (loginRequestDto.getEmpType().equals("HR")) {
@@ -210,14 +234,17 @@ public class LoginService {
                     } catch (Exception e) {
                         System.out.println("send mail error" + e);
                     }
-                    return loginResponseDto;
+                    apiResponse=new ApiResponse(HttpStatus.OK, true, loginResponseDto, ApiMessage.Api_Message);
+                    return apiResponse;
                 } else {
                     loginResponseDto.setMessage(ApiMessage.INVALID_credential_email);
-                    return loginResponseDto;
+                    apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.INVALID_credential_email);
+                    return apiResponse;
                 }
             } else {
                 loginResponseDto.setMessage(ApiMessage.INVALID_credential_email);
-                return loginResponseDto;
+                apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.INVALID_credential_email);
+                return apiResponse;
             }
         }
         /*HrDetails hr = hrRepositoy.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword());
@@ -230,11 +257,12 @@ public class LoginService {
         else{
         loginResponseDto = new LoginResponseDto(hr.getEmployeeId(),hr.getFirstName());
             loginResponseDto.setMessage("You have successful login");}*/
-        return loginResponseDto;
+        return apiResponse;
     }
 
-    public LoginResponseDto hrForgetCreatePassword(LoginRequestDto loginRequestDto) {
+    public ApiResponse hrForgetCreatePassword(LoginRequestDto loginRequestDto) throws Exception{
         LoginResponseDto loginResponseDto = new LoginResponseDto();
+        ApiResponse apiResponse= null;
         String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
                 + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
         boolean emailValidation = Pattern.compile(regexPattern)
@@ -244,13 +272,15 @@ public class LoginService {
         if (loginRequestDto.getEmail().isEmpty() || !emailValidation) {
             // logger.info("Please Enter valid email");
             loginResponseDto.setMessage(ApiMessage.ENTER_EMAIL);
-            return loginResponseDto;
+            apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.ENTER_EMAIL);
+            return apiResponse;
             //throw new BadReqException(ApiMessage.ENTER_EMAIL);
         }
         if (loginRequestDto.getPassword().isEmpty() || loginRequestDto.getPassword().length() < 4) {
             // logger.info("please Enter valid password");
             loginResponseDto.setMessage(ApiMessage.ENTER_PASSWORD);
-            return loginResponseDto;
+            apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.ENTER_PASSWORD);
+            return apiResponse;
             // throw new BadReqException(ApiMessage.ENTER_PASSWORD);
         }
         if (!loginRequestDto.getEmail().isEmpty() || !loginRequestDto.getPassword().isEmpty()) {
@@ -260,7 +290,8 @@ public class LoginService {
                     hrRepositoy.save(hr);
                     loginResponseDto = new LoginResponseDto(hr.getId(), hr.getFirstName());
                     loginResponseDto.setMessage("You have successfully update password");
-                    return loginResponseDto;
+                apiResponse=new ApiResponse(HttpStatus.OK, true, loginResponseDto, ApiMessage.Api_Message);
+                return apiResponse;
                 }
             else {
             EmployeeDetails emp = empRepository.findByEmail(loginRequestDto.getEmail());
@@ -269,11 +300,13 @@ public class LoginService {
                 empRepository.save(emp);
                 loginResponseDto = new LoginResponseDto(emp.getId(), emp.getFirstName());
                 loginResponseDto.setMessage("You have successfully update password");
-                return loginResponseDto;
+                apiResponse=new ApiResponse(HttpStatus.OK, true, loginResponseDto, ApiMessage.Api_Message);
+                return apiResponse;
             }
             else {
                 loginResponseDto.setMessage(ApiMessage.INVALID_credential_email);
-                return loginResponseDto;
+                apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.INVALID_credential_email);
+                return apiResponse;
             }
             }
         }
@@ -287,7 +320,7 @@ public class LoginService {
         else{
         loginResponseDto = new LoginResponseDto(hr.getEmployeeId(),hr.getFirstName());
             loginResponseDto.setMessage("You have successful login");}*/
-        return loginResponseDto;
+        return apiResponse;
 
     }
 
@@ -337,20 +370,23 @@ public class LoginService {
         return String.format("%06d", number);
     }
 
-    public LoginResponseDto forgetPasswordOtpVerify(ForgetPasswordRequestDto forgetPasswordRequestDto) {
+    public ApiResponse forgetPasswordOtpVerify(ForgetPasswordRequestDto forgetPasswordRequestDto) throws Exception{
         //logger.info("The user is candidate");
+        ApiResponse apiResponse = null;
         LoginResponseDto loginResponseDto = new LoginResponseDto();
             //throw new BadReqException(ApiMessage.ENTER_EMAIL);
             if(forgetPasswordRequestDto.getOtp().isEmpty() || forgetPasswordRequestDto.getOtp().length() < 6) {
                 // logger.info("please Enter valid password");
                 loginResponseDto.setMessage(ApiMessage.ENTER_OTP);
-                return loginResponseDto;
+                apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.ENTER_OTP);
+                return apiResponse;
                 // throw new BadReqException(ApiMessage.ENTER_PASSWORD);
             }
         if(forgetPasswordRequestDto.getEmpId()==null) {
             // logger.info("please Enter valid password");
             loginResponseDto.setMessage("Please enter emp id");
-            return loginResponseDto;
+            apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, "Please enter emp id");
+            return apiResponse;
             // throw new BadReqException(ApiMessage.ENTER_PASSWORD);
         }
 
@@ -360,7 +396,8 @@ public class LoginService {
                     loginResponseDto = new LoginResponseDto();
                     loginResponseDto.setEmployeeId(response.getEmployeeId());
                     loginResponseDto.setMessage("Otp successfully verify");
-                    return loginResponseDto;
+                    apiResponse=new ApiResponse(HttpStatus.OK, true, loginResponseDto, "Otp successfully verify");
+                    return apiResponse;
                /* // EmployeeDetails empPassword = empRepository.findByPassword(loginRequestDto.getPassword());
                 EmployeeDetails empPassword = empRepository.findByEmailAndPassword(loginRequestDto.getEmail(), loginRequestDto.getPassword());
                 if(empPassword==null){
@@ -374,9 +411,10 @@ public class LoginService {
                 }*/
                 } else {
                     loginResponseDto.setMessage(ApiMessage.INVALID_credential_otp);
-                    return loginResponseDto;
+                    apiResponse=new ApiResponse(HttpStatus.OK, true, loginResponseDto, ApiMessage.INVALID_credential_otp);
+                    return apiResponse;
                 }
             }
-        return loginResponseDto;
+        return apiResponse;
     }
 }
