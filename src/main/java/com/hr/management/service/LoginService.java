@@ -57,7 +57,7 @@ public class LoginService {
             return apiResponse;
             //throw new BadReqException(ApiMessage.ENTER_EMAIL);
         }
-        if (loginRequestDto.getEmail().isEmpty() || loginRequestDto.getPassword().length() < 4) {
+        if (loginRequestDto.getPassword().isEmpty() || loginRequestDto.getPassword().length() < 4) {
             // logger.info("please Enter valid password");
             loginResponseDto.setMessage(ApiMessage.ENTER_PASSWORD);
             apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.ENTER_PASSWORD);
