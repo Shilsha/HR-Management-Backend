@@ -26,7 +26,7 @@ public class ResponseDto {
 
     public String message;
  List<EmployeeDetails> employeeDetailsList;
-
+     public EmployeeDetails employeeDetails;
     public ResponseDto(Long employeeId, String firstName) {
         this.employeeId = employeeId;
         this.firstName = firstName;

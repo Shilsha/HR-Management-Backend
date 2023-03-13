@@ -36,10 +36,16 @@ public class RegistrationController {
         ApiResponse apiResponse = empRegistrationService.registor(employeeReqDto);
         return apiResponse.getResponse(apiResponse);
     }
-    @PostMapping(value = "/list_emp")
+    @GetMapping(value = "/list_emp")
     public ResponseEntity listEmp()
             throws Exception {
         ApiResponse apiResponse = empRegistrationService.listofEmp();
+        return apiResponse.getResponse(apiResponse);
+    }
+    @GetMapping(value = "/emp")
+    public ResponseEntity getEmpId(@RequestParam("id")  Long empId)
+            throws Exception {
+        ApiResponse apiResponse = empRegistrationService.getEmpDetail(empId);
         return apiResponse.getResponse(apiResponse);
     }
 }

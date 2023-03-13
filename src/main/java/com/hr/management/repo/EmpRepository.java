@@ -14,4 +14,8 @@ public interface EmpRepository extends JpaRepository<EmployeeDetails,Long> {
     EmployeeDetails findByEmail(String email);
 
     Optional<EmployeeDetails> findUserByEmail(String email);
+    @Query(value = "select * from employee_details where id = ?1",nativeQuery = true)
+    Optional<EmployeeDetails> findByEmpId(Long id);
+
+//
 }

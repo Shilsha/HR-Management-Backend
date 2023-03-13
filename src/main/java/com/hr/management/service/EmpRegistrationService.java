@@ -9,6 +9,7 @@ import com.hr.management.utils.ApiResponse;
 import com.hr.management.utils.BadReqException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import java.io.IOException;
@@ -212,6 +213,32 @@ public class EmpRegistrationService {
         } else {
             System.out.println("False");
             return false;
+        }
+    }
+    public ApiResponse getEmpDetail(Long empid) throws Exception {
+        ApiResponse apiResponse= null;
+        ResponseDto responseDto = new ResponseDto();
+        try {
+            // Creating a simple mail message
+            Optional<EmployeeDetails> employee = empRepository.findByEmpId(empid);
+            if (employee.isPresent()) {
+                EmployeeDetails employeeDetails= employee.get();
+                responseDto.setEmployeeDetails(employeeDetails);
+                apiResponse=new ApiResponse(HttpStatus.OK, true, responseDto, "Successfully get employee");
+                return apiResponse;
+            }
+            else{
+                responseDto.setMessage(ApiMessage.Not_Found);
+                apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, responseDto, ApiMessage.Not_Found);
+                return apiResponse;
+            }
+        }
+
+        // Catch block to handle the exceptions
+        catch (Exception e) {
+            responseDto.setMessage(ApiMessage.INTERNAL_ERROR);
+            apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, responseDto, ApiMessage.INTERNAL_ERROR);
+            return apiResponse;
         }
     }
 
