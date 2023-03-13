@@ -66,4 +66,10 @@ public class ApiMessage {
     public static String EmploymentHistory_Not_Found="employmentHistory not found";
     public static String Email_Sent= "Email sent sucessfully with reset code";
     public static final String INTERNAL_ERROR = "Internal Error";
+    public static final String SUCESSFULLY_CREATED = "Successfully created" ;
+    public static final String SUCESSFULLY_UPDFATED = "Successfully updated" ;
+    public static final String DATA_MESSAGE = "Please fill the correct data" ;
+    public static final String LIST_EMP = "Successfully get List of employee" ;
+    public static final String LIST_EMP_NOT_FOUND = "Data not found" ;
+
 }

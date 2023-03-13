@@ -12,4 +12,6 @@ public interface EmpRepository extends JpaRepository<EmployeeDetails,Long> {
     EmployeeDetails findByEmailAndPassword(String email, String password);
     @Query(value="select * from employee_details c where email=?1",nativeQuery = true)
     EmployeeDetails findByEmail(String email);
+
+    Optional<EmployeeDetails> findUserByEmail(String email);
 }

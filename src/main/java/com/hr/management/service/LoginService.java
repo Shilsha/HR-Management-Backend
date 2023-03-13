@@ -411,7 +411,7 @@ public class LoginService {
                 }*/
                 } else {
                     loginResponseDto.setMessage(ApiMessage.INVALID_credential_otp);
-                    apiResponse=new ApiResponse(HttpStatus.OK, true, loginResponseDto, ApiMessage.INVALID_credential_otp);
+                    apiResponse=new ApiResponse(HttpStatus.BAD_REQUEST, false, loginResponseDto, ApiMessage.INVALID_credential_otp);
                     return apiResponse;
                 }
             }

@@ -28,6 +28,19 @@ public class EmployeeDetails extends BaseEntity{
 
     @Column(name = "designation")
     public String designation;
+
+    @Column(name = "phone_number")
+    public String phoneNumber;
+    @Column(name = "recruiter_name")
+    public String recruiterName;
+
+    @Column(name = "dob")
+    public String dob;
+    @Column(name = "total_experience")
+    public String totalExperience;
+    @Column(name = "current_address")
+    public String currentAddress;
+
     @Column(name = "password")
     public String password;
 
